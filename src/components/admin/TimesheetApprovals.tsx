@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format, addDays } from "date-fns";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import Link from "next/link";
-import WeekNavigation from "@/components/timesheets/WeekNavigation";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { format, addDays } from 'date-fns';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import Link from 'next/link';
+import WeekNavigation from '@/components/timesheets/WeekNavigation';
+import { useRouter } from 'next/navigation';
 import {
   TimesheetWeekWithRelations,
   TimesheetWithRelations,
   TimesheetStatus,
-} from "@/types/database.types";
-import { withRetry } from "@/utils/apiRetry";
-import { createClientServer } from "@/utils/supabase/server";
+} from '@/types/database.types';
+import { withRetry } from '@/utils/apiRetry';
+import { createClientServer } from '@/utils/supabase/server';
 
 interface WeeklyTimesheet {
   id: string;
@@ -53,16 +53,16 @@ export default function TimesheetApprovals({
   const [timesheets, setTimesheets] = useState(initialWeeklyTimesheets);
   const [selectedTimesheet, setSelectedTimesheet] =
     useState<WeeklyTimesheet | null>(null);
-  const [action, setAction] = useState<"approve" | "reject" | null>(null);
+  const [action, setAction] = useState<'approve' | 'reject' | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
-  const [statusFilter, setStatusFilter] = useState<"all" | TimesheetStatus>(
-    "all"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimesheetStatus>(
+    'all',
   );
 
   const supabase = createClientServer();
@@ -72,13 +72,13 @@ export default function TimesheetApprovals({
   }, [initialWeeklyTimesheets]);
 
   const filteredTimesheets =
-    statusFilter === "all"
+    statusFilter === 'all'
       ? timesheets
       : timesheets.filter((week) => week.status === statusFilter);
 
   const handleAction = async (
     timesheet: WeeklyTimesheet,
-    action: "approve" | "reject"
+    action: 'approve' | 'reject',
   ) => {
     try {
       setError(null);
@@ -89,36 +89,36 @@ export default function TimesheetApprovals({
           const { error: updateError } = await (
             await supabase
           )
-            .from("timesheet_weeks")
+            .from('timesheet_weeks')
             .update({
-              status: action === "approve" ? "approved" : "rejected",
+              status: action === 'approve' ? 'approved' : 'rejected',
               updated_at: new Date().toISOString(),
             })
-            .eq("id", timesheet.id);
+            .eq('id', timesheet.id);
           if (updateError) throw updateError;
           return true;
         },
-        { maxAttempts: 3, delayMs: 1000 }
+        { maxAttempts: 3, delayMs: 1000 },
       );
 
       setTimesheets((prev) =>
         prev.map((t) =>
           t.id === timesheet.id
-            ? { ...t, status: action === "approve" ? "approved" : "rejected" }
-            : t
-        )
+            ? { ...t, status: action === 'approve' ? 'approved' : 'rejected' }
+            : t,
+        ),
       );
 
       setNotification({
         message: `Timesheet ${action}d successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[TimesheetApprovals] Action error:", error);
+      console.error('[TimesheetApprovals] Action error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : `Failed to ${action} timesheet. Please try again.`
+          : `Failed to ${action} timesheet. Please try again.`,
       );
     } finally {
       setIsUpdating(false);
@@ -148,7 +148,7 @@ export default function TimesheetApprovals({
           <select
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(e.target.value as "all" | TimesheetStatus)
+              setStatusFilter(e.target.value as 'all' | TimesheetStatus)
             }
             className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900"
           >
@@ -210,23 +210,23 @@ export default function TimesheetApprovals({
                         {week.user.full_name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                        {format(new Date(week.week_start_date), "MMM d")} -{" "}
+                        {format(new Date(week.week_start_date), 'MMM d')} -{' '}
                         {format(
                           addDays(new Date(week.week_start_date), 6),
-                          "MMM d, yyyy"
+                          'MMM d, yyyy',
                         )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
                         {week.timesheets
                           .map(
                             (t: TimesheetWithRelations) =>
-                              t.project?.name || "Unknown Project"
+                              t.project?.name || 'Unknown Project',
                           )
                           .filter(
                             (value: string, index: number, self: string[]) =>
-                              self.indexOf(value) === index
+                              self.indexOf(value) === index,
                           )
-                          .join(", ")}
+                          .join(', ')}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
                         {week.total_hours}
@@ -234,13 +234,13 @@ export default function TimesheetApprovals({
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         <span
                           className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                            week.status === "submitted"
-                              ? "bg-yellow-50 text-yellow-700"
-                              : week.status === "approved"
-                              ? "bg-green-50 text-green-700"
-                              : week.status === "rejected"
-                              ? "bg-red-50 text-red-700"
-                              : "bg-slate-50 text-slate-600"
+                            week.status === 'submitted'
+                              ? 'bg-yellow-50 text-yellow-700'
+                              : week.status === 'approved'
+                                ? 'bg-green-50 text-green-700'
+                                : week.status === 'rejected'
+                                  ? 'bg-red-50 text-red-700'
+                                  : 'bg-slate-50 text-slate-600'
                           }`}
                         >
                           {week.status.charAt(0).toUpperCase() +
@@ -289,7 +289,7 @@ export default function TimesheetApprovals({
           }
         }}
         title={`${action?.charAt(0).toUpperCase()}${action?.slice(
-          1
+          1,
         )} Timesheet`}
         message={`Are you sure you want to ${action} this timesheet?`}
         isLoading={isUpdating}

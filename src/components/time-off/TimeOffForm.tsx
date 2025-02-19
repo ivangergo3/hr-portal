@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { User, TimeOffStatus } from "@/types/database.types";
+import { useState } from 'react';
+import { User, TimeOffStatus } from '@/types/database.types';
 import {
   validateTimeOff,
   validateRequired,
   validateLength,
   LIMITS,
-} from "@/utils/validation";
-import { withRetry } from "@/utils/apiRetry";
-import { createClient } from "@/utils/supabase/client";
+} from '@/utils/validation';
+import { withRetry } from '@/utils/apiRetry';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimeOffFormProps {
   user: User;
@@ -15,9 +15,9 @@ interface TimeOffFormProps {
 }
 
 export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [reason, setReason] = useState("");
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +26,7 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
     setError(null);
 
     // Validate required fields
-    const reasonError = validateRequired(reason, "Reason");
+    const reasonError = validateRequired(reason, 'Reason');
     if (reasonError) {
       setError(reasonError);
       return;
@@ -35,8 +35,8 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
     // Validate reason length
     const lengthError = validateLength(
       reason,
-      "Reason",
-      LIMITS.MAX_REASON_LENGTH
+      'Reason',
+      LIMITS.MAX_REASON_LENGTH,
     );
     if (lengthError) {
       setError(lengthError);
@@ -57,30 +57,30 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
       await withRetry(
         async () => {
           const { error: submitError } = await supabase
-            .from("time_off_requests")
+            .from('time_off_requests')
             .insert({
               user_id: user.id,
               start_date: startDate,
               end_date: endDate,
               reason,
-              status: "pending" as TimeOffStatus,
+              status: 'pending' as TimeOffStatus,
             });
           if (submitError) throw submitError;
           return true;
         },
-        { maxAttempts: 3, delayMs: 1000 }
+        { maxAttempts: 3, delayMs: 1000 },
       );
 
-      setStartDate("");
-      setEndDate("");
-      setReason("");
+      setStartDate('');
+      setEndDate('');
+      setReason('');
       onSuccess();
     } catch (error) {
-      console.error("[TimeOffForm] Submit error:", error);
+      console.error('[TimeOffForm] Submit error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to submit request. Please try again."
+          : 'Failed to submit request. Please try again.',
       );
     } finally {
       setIsSubmitting(false);
@@ -102,7 +102,7 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
             id="start_date"
             name="start_date"
             required
-            min={new Date().toISOString().split("T")[0]}
+            min={new Date().toISOString().split('T')[0]}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
@@ -121,7 +121,7 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
             id="end_date"
             name="end_date"
             required
-            min={startDate || new Date().toISOString().split("T")[0]}
+            min={startDate || new Date().toISOString().split('T')[0]}
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
@@ -163,7 +163,7 @@ export default function TimeOffForm({ user, onSuccess }: TimeOffFormProps) {
           disabled={isSubmitting}
           className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
         >
-          {isSubmitting ? "Submitting..." : "Submit Request"}
+          {isSubmitting ? 'Submitting...' : 'Submit Request'}
         </button>
       </div>
     </form>

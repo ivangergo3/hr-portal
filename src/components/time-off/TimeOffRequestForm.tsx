@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { LuLoader } from "react-icons/lu";
-import Notification from "@/components/common/Notification";
+import { useState, useEffect } from 'react';
+import { LuLoader } from 'react-icons/lu';
+import Notification from '@/components/common/Notification';
 import {
   TimeOffRequest,
   TimeOffType,
   SupabaseError,
-} from "@/types/database.types";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import { createClient } from "@/utils/supabase/client";
+} from '@/types/database.types';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimeOffRequestFormProps {
   userId: string;
@@ -26,16 +26,16 @@ export default function TimeOffRequestForm({
 }: TimeOffRequestFormProps) {
   const [request, setRequest] = useState<Partial<TimeOffRequest>>(
     initialRequest || {
-      type: "vacation",
-      status: "draft",
-    }
+      type: 'vacation',
+      status: 'draft',
+    },
   );
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,16 +54,16 @@ export default function TimeOffRequestForm({
     const errors: Record<string, string> = {};
 
     if (!request.start_date) {
-      errors.start_date = "Start date is required";
+      errors.start_date = 'Start date is required';
     }
     if (!request.end_date) {
-      errors.end_date = "End date is required";
+      errors.end_date = 'End date is required';
     }
     if (!request.description?.trim()) {
-      errors.description = "Description is required";
+      errors.description = 'Description is required';
     }
     if (!request.type) {
-      errors.type = "Type is required";
+      errors.type = 'Type is required';
     }
 
     setFieldErrors(errors);
@@ -72,12 +72,12 @@ export default function TimeOffRequestForm({
 
   const handleSubmit = async (
     e: React.FormEvent,
-    status: "draft" | "submitted"
+    status: 'draft' | 'submitted',
   ) => {
     e.preventDefault();
 
-    if (status === "submitted" && !validateForm()) {
-      setError("Please fill in all required fields");
+    if (status === 'submitted' && !validateForm()) {
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -94,44 +94,44 @@ export default function TimeOffRequestForm({
 
       const { error: saveError } = initialRequest
         ? await supabase
-            .from("time_off_requests")
+            .from('time_off_requests')
             .update(data)
-            .eq("id", initialRequest.id)
-        : await supabase.from("time_off_requests").insert([data]);
+            .eq('id', initialRequest.id)
+        : await supabase.from('time_off_requests').insert([data]);
 
       if (saveError) {
-        console.error("[TimeOffRequestForm] Save error:", saveError.message);
-        setError("Failed to save request. Please try again.");
+        console.error('[TimeOffRequestForm] Save error:', saveError.message);
+        setError('Failed to save request. Please try again.');
         return;
       }
 
       setNotification({
         message: `Request ${
-          status === "submitted" ? "submitted" : "saved"
+          status === 'submitted' ? 'submitted' : 'saved'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
 
       onSuccess();
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("[TimeOffForm] Error:", error.message);
+        console.error('[TimeOffForm] Error:', error.message);
       } else if (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "code" in error &&
-        "message" in error
+        'code' in error &&
+        'message' in error
       ) {
         const dbError = error as SupabaseError;
-        console.error("[TimeOffForm] Database error:", {
+        console.error('[TimeOffForm] Database error:', {
           code: dbError.code,
           message: dbError.message,
           details: dbError.details,
         });
       } else {
-        console.error("[TimeOffForm] Unknown error:", error);
+        console.error('[TimeOffForm] Unknown error:', error);
       }
-      setError("An unexpected error occurred. Please try again.");
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -240,7 +240,7 @@ export default function TimeOffRequestForm({
             </button>
             <button
               type="button"
-              onClick={(e) => handleSubmit(e, "draft")}
+              onClick={(e) => handleSubmit(e, 'draft')}
               disabled={isSubmitting}
               className="rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-200"
             >
@@ -248,14 +248,14 @@ export default function TimeOffRequestForm({
             </button>
             <button
               type="submit"
-              onClick={(e) => handleSubmit(e, "submitted")}
+              onClick={(e) => handleSubmit(e, 'submitted')}
               disabled={isSubmitting}
               className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <LuLoader className="h-4 w-4 animate-spin" />
               ) : (
-                "Submit"
+                'Submit'
               )}
             </button>
           </div>

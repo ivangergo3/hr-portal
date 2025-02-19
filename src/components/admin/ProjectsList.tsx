@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import AdminGuard from "@/components/auth/AdminGuard";
-import { User, Project, Client } from "@/types/database.types";
-import Link from "next/link";
-import { LuPlus, LuArchive, LuArchiveRestore } from "react-icons/lu";
-import { useState, useEffect } from "react";
-import Notification from "@/components/common/Notification";
-import { withRetry } from "@/utils/apiRetry";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import { User, Project, Client } from '@/types/database.types';
+import Link from 'next/link';
+import { LuPlus, LuArchive, LuArchiveRestore } from 'react-icons/lu';
+import { useState, useEffect } from 'react';
+import Notification from '@/components/common/Notification';
+import { withRetry } from '@/utils/apiRetry';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
+import { createClientServer } from '@/utils/supabase/server';
 interface ProjectsListProps {
   user: User;
   initialProjects: (Project & { client: Client })[];
@@ -25,7 +25,7 @@ export default function ProjectsList({
   const [isUpdating, setIsUpdating] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,8 +46,8 @@ export default function ProjectsList({
         title="No projects found"
         message={
           showArchived
-            ? "No archived projects found."
-            : "No active projects found."
+            ? 'No archived projects found.'
+            : 'No active projects found.'
         }
       />
     );
@@ -63,16 +63,16 @@ export default function ProjectsList({
           const { error: updateError } = await (
             await supabase
           )
-            .from("projects")
+            .from('projects')
             .update({
               archived: !project.archived,
               archived_at: !project.archived ? new Date().toISOString() : null,
             })
-            .eq("id", project.id);
+            .eq('id', project.id);
           if (updateError) throw updateError;
           return true;
         },
-        { maxAttempts: 3, delayMs: 1000 }
+        { maxAttempts: 3, delayMs: 1000 },
       );
 
       setProjects((prev) =>
@@ -83,22 +83,22 @@ export default function ProjectsList({
                 archived: !p.archived,
                 archived_at: !p.archived ? new Date().toISOString() : null,
               }
-            : p
-        )
+            : p,
+        ),
       );
 
       setNotification({
         message: `Project ${
-          project.archived ? "unarchived" : "archived"
+          project.archived ? 'unarchived' : 'archived'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[ProjectsList] Toggle archive error:", error);
+      console.error('[ProjectsList] Toggle archive error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to update project status. Please try again."
+          : 'Failed to update project status. Please try again.',
       );
     } finally {
       setIsUpdating(false);
@@ -106,7 +106,7 @@ export default function ProjectsList({
   };
 
   const filteredProjects = projects.filter(
-    (project) => project.archived === showArchived
+    (project) => project.archived === showArchived,
   );
 
   return (
@@ -169,15 +169,15 @@ export default function ProjectsList({
                         <span
                           className={
                             project.archived
-                              ? "line-through text-slate-500"
-                              : ""
+                              ? 'line-through text-slate-500'
+                              : ''
                           }
                         >
                           {project.name}
                         </span>
                         {project.archived && project.archived_at && (
                           <span className="ml-2 text-xs text-slate-500">
-                            (Archived{" "}
+                            (Archived{' '}
                             {new Date(project.archived_at).toLocaleDateString()}
                             )
                           </span>
@@ -193,7 +193,7 @@ export default function ProjectsList({
                             className="text-slate-600 hover:text-slate-900"
                             disabled={isUpdating}
                           >
-                            {project.archived ? "Unarchive" : "Archive"}
+                            {project.archived ? 'Unarchive' : 'Archive'}
                           </button>
                           <Link
                             href={`/admin/projects/${project.id}`}

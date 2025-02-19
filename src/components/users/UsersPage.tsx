@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { User, Role, SupabaseError } from "@/types/database.types";
-import UsersList from "./UsersList";
-import InviteUserForm from "./InviteUserForm";
-import { LuUserPlus } from "react-icons/lu";
-import Notification from "@/components/common/Notification";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from 'react';
+import { User, Role, SupabaseError } from '@/types/database.types';
+import UsersList from './UsersList';
+import InviteUserForm from './InviteUserForm';
+import { LuUserPlus } from 'react-icons/lu';
+import Notification from '@/components/common/Notification';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import { createClient } from '@/utils/supabase/client';
 interface UsersPageProps {
   currentUser: User;
   users: User[];
@@ -24,7 +24,7 @@ export default function UsersPage({
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
 
   const supabase = createClient();
@@ -36,48 +36,48 @@ export default function UsersPage({
       setError(null);
 
       const { error: updateError } = await supabase
-        .from("users")
+        .from('users')
         .update({ role: newRole })
-        .eq("id", selectedUser.id);
+        .eq('id', selectedUser.id);
 
       if (updateError) {
-        console.error("[UsersPage] Role update error:", updateError.message);
-        setError("Failed to update user role. Please try again.");
+        console.error('[UsersPage] Role update error:', updateError.message);
+        setError('Failed to update user role. Please try again.');
         return;
       }
 
       // Update local state
       setUsers((current) =>
         current.map((u) =>
-          u.id === selectedUser.id ? { ...u, role: newRole } : u
-        )
+          u.id === selectedUser.id ? { ...u, role: newRole } : u,
+        ),
       );
 
       setNotification({
         message: `Role updated successfully for ${
           selectedUser.full_name || selectedUser.email
         }`,
-        type: "success",
+        type: 'success',
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("[UsersPage] Error:", error.message);
+        console.error('[UsersPage] Error:', error.message);
       } else if (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "code" in error &&
-        "message" in error
+        'code' in error &&
+        'message' in error
       ) {
         const dbError = error as SupabaseError;
-        console.error("[UsersPage] Database error:", {
+        console.error('[UsersPage] Database error:', {
           code: dbError.code,
           message: dbError.message,
           details: dbError.details,
         });
       } else {
-        console.error("[UsersPage] Unknown error:", error);
+        console.error('[UsersPage] Unknown error:', error);
       }
-      setError("Failed to update user role. Please try again.");
+      setError('Failed to update user role. Please try again.');
     } finally {
       setShowRoleDialog(false);
       setSelectedUser(null);
@@ -143,13 +143,13 @@ export default function UsersPage({
         }}
         onConfirm={() =>
           handleRoleChange(
-            selectedUser?.role === "admin" ? "employee" : "admin"
+            selectedUser?.role === 'admin' ? 'employee' : 'admin',
           )
         }
         title="Change User Role"
         message={`Are you sure you want to change ${
           selectedUser?.full_name || selectedUser?.email
-        }'s role to ${selectedUser?.role === "admin" ? "employee" : "admin"}?`}
+        }'s role to ${selectedUser?.role === 'admin' ? 'employee' : 'admin'}?`}
       />
     </div>
   );

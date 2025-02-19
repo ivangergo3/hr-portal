@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { User } from "@/types/database.types";
+import { useRouter } from 'next/navigation';
+import { User } from '@/types/database.types';
 
 export default function AdminGuard({
   children,
@@ -12,8 +12,8 @@ export default function AdminGuard({
 }) {
   const router = useRouter();
 
-  if (user.role !== "admin") {
-    router.push("/dashboard");
+  if (user.role !== 'admin') {
+    router.push('/dashboard');
     return null;
   }
 

@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { createClientServer } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { TimeOffApprovalHeader } from "@/components/time-off/TimeOffApprovalHeader";
-import { TimeOffApprovalContent } from "@/components/time-off/TimeOffApprovalContent";
+import { Suspense } from 'react';
+import { createClientServer } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
+import { TimeOffApprovalHeader } from '@/components/time-off/TimeOffApprovalHeader';
+import { TimeOffApprovalContent } from '@/components/time-off/TimeOffApprovalContent';
 
 export default async function TimeOffApprovalsPage() {
   const supabase = await createClientServer();
@@ -10,7 +10,7 @@ export default async function TimeOffApprovalsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
+  if (!user) redirect('/');
 
   return (
     <div>

@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { LuFileQuestion } from "react-icons/lu";
+import Link from 'next/link';
+import { LuFileQuestion } from 'react-icons/lu';
 
 export default function NotFound() {
   return (

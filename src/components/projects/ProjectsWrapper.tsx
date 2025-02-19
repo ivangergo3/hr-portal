@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
-import { Suspense } from "react";
-import { ProjectsHeader } from "./ProjectsHeader";
-import { ProjectsContent } from "./ProjectsContent";
+import { useState, useRef } from 'react';
+import { Suspense } from 'react';
+import { ProjectsHeader } from './ProjectsHeader';
+import { ProjectsContent } from './ProjectsContent';
 
 export function ProjectsWrapper() {
   const [showArchived, setShowArchived] = useState(false);

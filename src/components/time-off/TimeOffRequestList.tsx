@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { TimeOffRequestWithUser, TimeOffStatus } from "@/types/database.types";
-import { format } from "date-fns";
-import { LuPencil } from "react-icons/lu";
+import { useState } from 'react';
+import { TimeOffRequestWithUser, TimeOffStatus } from '@/types/database.types';
+import { format } from 'date-fns';
+import { LuPencil } from 'react-icons/lu';
 
 interface TimeOffRequestListProps {
   requests: TimeOffRequestWithUser[];
@@ -16,12 +16,12 @@ export default function TimeOffRequestList({
   onEdit,
   isLoading,
 }: TimeOffRequestListProps) {
-  const [statusFilter, setStatusFilter] = useState<"all" | TimeOffStatus>(
-    "all"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimeOffStatus>(
+    'all',
   );
 
   const filteredRequests =
-    statusFilter === "all"
+    statusFilter === 'all'
       ? requests
       : requests.filter((request) => request.status === statusFilter);
 
@@ -41,7 +41,7 @@ export default function TimeOffRequestList({
         <select
           value={statusFilter}
           onChange={(e) =>
-            setStatusFilter(e.target.value as "all" | TimeOffStatus)
+            setStatusFilter(e.target.value as 'all' | TimeOffStatus)
           }
           className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900"
           disabled={isLoading}
@@ -101,10 +101,10 @@ export default function TimeOffRequestList({
                           request.type.slice(1)}
                       </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-900 sm:pl-0">
-                        {format(new Date(request.start_date), "MMM d, yyyy")}
+                        {format(new Date(request.start_date), 'MMM d, yyyy')}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                        {format(new Date(request.end_date), "MMM d, yyyy")}
+                        {format(new Date(request.end_date), 'MMM d, yyyy')}
                       </td>
                       <td className="px-3 py-4 text-sm text-slate-500">
                         {request.description}
@@ -113,19 +113,19 @@ export default function TimeOffRequestList({
                         <div className="flex items-center gap-3">
                           <span
                             className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                              request.status === "submitted"
-                                ? "bg-yellow-50 text-yellow-700"
-                                : request.status === "approved"
-                                ? "bg-green-50 text-green-700"
-                                : request.status === "rejected"
-                                ? "bg-red-50 text-red-700"
-                                : "bg-slate-100 text-slate-700"
+                              request.status === 'submitted'
+                                ? 'bg-yellow-50 text-yellow-700'
+                                : request.status === 'approved'
+                                  ? 'bg-green-50 text-green-700'
+                                  : request.status === 'rejected'
+                                    ? 'bg-red-50 text-red-700'
+                                    : 'bg-slate-100 text-slate-700'
                             }`}
                           >
                             {request.status.charAt(0).toUpperCase() +
                               request.status.slice(1)}
                           </span>
-                          {request.status === "draft" && (
+                          {request.status === 'draft' && (
                             <button
                               onClick={() => onEdit?.(request)}
                               className="text-slate-400 hover:text-slate-600"

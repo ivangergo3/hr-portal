@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { LuLoader, LuX } from "react-icons/lu";
-import type { Role } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import React, { useState } from 'react';
+import { LuLoader, LuX } from 'react-icons/lu';
+import type { Role } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 
 type InviteUserModalProps = {
   isOpen: boolean;
@@ -12,8 +12,8 @@ type InviteUserModalProps = {
 
 export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
   const [formData, setFormData] = useState({
-    email: "",
-    role: "employee" as Role,
+    email: '',
+    role: 'employee' as Role,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
       if (inviteError) throw inviteError;
 
       // Create user record
-      const { error: createError } = await supabase.from("users").insert([
+      const { error: createError } = await supabase.from('users').insert([
         {
           email: formData.email,
           role: formData.role,
@@ -49,8 +49,8 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
 
       onClose();
     } catch (error) {
-      console.error("[InviteUser] Error:", error);
-      setError("Failed to send invitation. Please try again.");
+      console.error('[InviteUser] Error:', error);
+      setError('Failed to send invitation. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -136,7 +136,7 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
               {isSubmitting ? (
                 <LuLoader className="h-4 w-4 animate-spin" />
               ) : (
-                "Send Invitation"
+                'Send Invitation'
               )}
             </button>
           </div>

@@ -6,10 +6,10 @@ interface RetryConfig {
 
 export async function withRetry<T>(
   operation: () => Promise<T>,
-  config: RetryConfig = {}
+  config: RetryConfig = {},
 ): Promise<T> {
   const { maxAttempts = 3, delayMs = 1000, backoff = true } = config;
-  let lastError = new Error("Operation failed");
+  let lastError = new Error('Operation failed');
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {

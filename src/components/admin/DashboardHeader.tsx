@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { format } from "date-fns";
+import { useState } from 'react';
+import Link from 'next/link';
+import { format } from 'date-fns';
 import {
   LuClock,
   LuBriefcase,
   LuClipboardList,
   LuCalendarOff,
   LuUsers,
-} from "react-icons/lu";
+} from 'react-icons/lu';
 
 interface DashboardHeaderProps {
   stats: {
@@ -23,16 +23,16 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ stats }: DashboardHeaderProps) {
   const [startDate, setStartDate] = useState(
-    format(new Date().setDate(1), "yyyy-MM-dd")
+    format(new Date().setDate(1), 'yyyy-MM-dd'),
   );
   const [endDate, setEndDate] = useState(() => {
     const today = new Date();
     const lastDayOfMonth = new Date(
       today.getFullYear(),
       today.getMonth() + 1,
-      0
+      0,
     );
-    return format(lastDayOfMonth, "yyyy-MM-dd");
+    return format(lastDayOfMonth, 'yyyy-MM-dd');
   });
 
   return (

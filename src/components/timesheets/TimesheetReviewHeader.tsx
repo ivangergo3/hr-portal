@@ -1,6 +1,6 @@
-import { LuArrowLeft, LuCheck, LuX } from "react-icons/lu";
-import type { TimesheetWeekWithRelations } from "@/types/database.types";
-import { format } from "date-fns";
+import { LuArrowLeft, LuCheck, LuX } from 'react-icons/lu';
+import type { TimesheetWeekWithRelations } from '@/types/database.types';
+import { format } from 'date-fns';
 
 interface TimesheetReviewHeaderProps {
   timesheet: TimesheetWeekWithRelations | null;
@@ -34,13 +34,13 @@ export function TimesheetReviewHeader({
               </h1>
               {timesheet && (
                 <p className="mt-1 text-sm text-slate-600">
-                  {timesheet.user.full_name} -{" "}
-                  {format(new Date(timesheet.week_start_date), "MMM d, yyyy")}
+                  {timesheet.user.full_name} -{' '}
+                  {format(new Date(timesheet.week_start_date), 'MMM d, yyyy')}
                 </p>
               )}
             </div>
           </div>
-          {timesheet?.status === "submitted" && (
+          {timesheet?.status === 'submitted' && (
             <div className="flex items-center gap-3">
               <button
                 onClick={onReject}

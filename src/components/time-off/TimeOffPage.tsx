@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { TimeOffRequest, TimeOffRequestWithUser } from "@/types/database.types";
-import TimeOffRequestForm from "./TimeOffRequestForm";
-import TimeOffRequestList from "./TimeOffRequestList";
-import { LuPlus } from "react-icons/lu";
-import { User } from "@supabase/supabase-js";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
+import { useState, useEffect } from 'react';
+import { TimeOffRequest, TimeOffRequestWithUser } from '@/types/database.types';
+import TimeOffRequestForm from './TimeOffRequestForm';
+import TimeOffRequestList from './TimeOffRequestList';
+import { LuPlus } from 'react-icons/lu';
+import { User } from '@supabase/supabase-js';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
 
 interface TimeOffPageProps {
   user: User;
@@ -21,7 +21,7 @@ export default function TimeOffPage({
 }: TimeOffPageProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingRequest, setEditingRequest] = useState<TimeOffRequest | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,7 +45,7 @@ export default function TimeOffPage({
         title="No time off requests"
         message="You haven't made any time off requests yet."
         action={{
-          label: "Request Time Off",
+          label: 'Request Time Off',
           onClick: () => setShowForm(true),
         }}
       />

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { User } from "@/types/database.types";
-import { ProfileForm } from "./ProfileForm";
+import { User } from '@/types/database.types';
+import { ProfileForm } from './ProfileForm';
 
 interface ProfilePageClientProps {
   user: User;

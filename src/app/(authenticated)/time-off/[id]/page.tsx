@@ -1,7 +1,7 @@
-import { redirect, notFound } from "next/navigation";
-import TimeOffRequestForm from "@/components/time-off/TimeOffRequestForm";
-import { SupabaseError } from "@/types/database.types";
-import { createClientServer } from "@/utils/supabase/server";
+import { redirect, notFound } from 'next/navigation';
+import TimeOffRequestForm from '@/components/time-off/TimeOffRequestForm';
+import { SupabaseError } from '@/types/database.types';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimeOffRequestPage({
   params,
@@ -15,24 +15,24 @@ export default async function TimeOffRequestPage({
       data: { session },
     } = await supabase.auth.getSession();
     if (!session) {
-      redirect("/error?code=auth");
+      redirect('/error?code=auth');
     }
 
     // Get user data for permission check
     const { data: userData } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", session.user.id)
+      .from('users')
+      .select('role')
+      .eq('id', session.user.id)
       .single();
 
     const { data: request, error: requestError } = await supabase
-      .from("time_off_requests")
-      .select("*")
-      .eq("id", params.id)
+      .from('time_off_requests')
+      .select('*')
+      .eq('id', params.id)
       .single();
 
     if (requestError) {
-      redirect("/error?code=critical");
+      redirect('/error?code=critical');
     }
 
     if (!request) {
@@ -40,8 +40,8 @@ export default async function TimeOffRequestPage({
     }
 
     // Check if user has access to this request
-    if (request.user_id !== session.user.id && userData?.role !== "admin") {
-      redirect("/error?code=permission");
+    if (request.user_id !== session.user.id && userData?.role !== 'admin') {
+      redirect('/error?code=permission');
     }
 
     return (
@@ -54,8 +54,8 @@ export default async function TimeOffRequestPage({
             <TimeOffRequestForm
               userId={session.user.id}
               initialRequest={request}
-              onSuccess={() => redirect("/time-off")}
-              onCancel={() => redirect("/time-off")}
+              onSuccess={() => redirect('/time-off')}
+              onCancel={() => redirect('/time-off')}
             />
           </div>
         </div>
@@ -63,22 +63,22 @@ export default async function TimeOffRequestPage({
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("[TimeOff] Error:", error.message);
+      console.error('[TimeOff] Error:', error.message);
     } else if (
-      typeof error === "object" &&
+      typeof error === 'object' &&
       error !== null &&
-      "code" in error &&
-      "message" in error
+      'code' in error &&
+      'message' in error
     ) {
       const dbError = error as SupabaseError;
-      console.error("[TimeOff] Database error:", {
+      console.error('[TimeOff] Database error:', {
         code: dbError.code,
         message: dbError.message,
         details: dbError.details,
       });
     } else {
-      console.error("[TimeOff] Unknown error:", error);
+      console.error('[TimeOff] Unknown error:', error);
     }
-    redirect("/error?code=critical");
+    redirect('/error?code=critical');
   }
 }

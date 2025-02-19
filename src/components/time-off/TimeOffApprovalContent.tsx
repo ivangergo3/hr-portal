@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import type {
   TimeOffRequestWithUser,
   TimeOffStatus,
-} from "@/types/database.types";
-import { format } from "date-fns";
-import { LuCheck, LuX } from "react-icons/lu";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { createClient } from "@/utils/supabase/client";
+} from '@/types/database.types';
+import { format } from 'date-fns';
+import { LuCheck, LuX } from 'react-icons/lu';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimeOffApprovalContentProps {
   userId: string;
@@ -18,18 +18,18 @@ interface TimeOffApprovalContentProps {
 export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [requests, setRequests] = useState<TimeOffRequestWithUser[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"all" | TimeOffStatus>(
-    "submitted"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimeOffStatus>(
+    'submitted',
   );
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedAction, setSelectedAction] = useState<
-    "approve" | "reject" | null
+    'approve' | 'reject' | null
   >(null);
   const [selectedRequest, setSelectedRequest] =
     useState<TimeOffRequestWithUser | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const supabase = createClient();
 
@@ -38,7 +38,7 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
       try {
         setIsLoading(true);
         const query = supabase
-          .from("time_off_requests")
+          .from('time_off_requests')
           .select(
             `
             *,
@@ -48,13 +48,13 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
               full_name,
               role
             )
-          `
+          `,
           )
-          .order("created_at", { ascending: false });
+          .order('created_at', { ascending: false });
 
         // Only apply status filter if not "all"
-        if (statusFilter !== "all") {
-          query.eq("status", statusFilter);
+        if (statusFilter !== 'all') {
+          query.eq('status', statusFilter);
         }
 
         const { data } = await query;
@@ -73,12 +73,12 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
     try {
       setIsLoading(true);
       const { error } = await supabase
-        .from("time_off_requests")
+        .from('time_off_requests')
         .update({
-          status: selectedAction === "approve" ? "approved" : "rejected",
+          status: selectedAction === 'approve' ? 'approved' : 'rejected',
           updated_at: new Date().toISOString(),
         })
-        .eq("id", selectedRequest.id);
+        .eq('id', selectedRequest.id);
 
       if (error) throw error;
 
@@ -87,23 +87,23 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
           r.id === selectedRequest.id
             ? {
                 ...r,
-                status: selectedAction === "approve" ? "approved" : "rejected",
+                status: selectedAction === 'approve' ? 'approved' : 'rejected',
               }
-            : r
-        )
+            : r,
+        ),
       );
 
       setNotification({
         message: `Request ${
-          selectedAction === "approve" ? "approved" : "rejected"
+          selectedAction === 'approve' ? 'approved' : 'rejected'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[TimeOffApproval] Action error:", error);
+      console.error('[TimeOffApproval] Action error:', error);
       setNotification({
-        message: "Failed to process request",
-        type: "error",
+        message: 'Failed to process request',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -130,7 +130,7 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
           <select
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(e.target.value as "all" | TimeOffStatus)
+              setStatusFilter(e.target.value as 'all' | TimeOffStatus)
             }
             className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900"
           >
@@ -182,29 +182,29 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
                     {request.type}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                    {format(new Date(request.start_date), "MMM d")} -{" "}
-                    {format(new Date(request.end_date), "MMM d, yyyy")}
+                    {format(new Date(request.start_date), 'MMM d')} -{' '}
+                    {format(new Date(request.end_date), 'MMM d, yyyy')}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm">
                     <div className="flex items-center justify-between">
                       <span
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                          request.status === "submitted"
-                            ? "bg-yellow-50 text-yellow-700"
-                            : request.status === "approved"
-                            ? "bg-green-50 text-green-700"
-                            : request.status === "rejected"
-                            ? "bg-red-50 text-red-700"
-                            : "bg-slate-100 text-slate-700"
+                          request.status === 'submitted'
+                            ? 'bg-yellow-50 text-yellow-700'
+                            : request.status === 'approved'
+                              ? 'bg-green-50 text-green-700'
+                              : request.status === 'rejected'
+                                ? 'bg-red-50 text-red-700'
+                                : 'bg-slate-100 text-slate-700'
                         }`}
                       >
                         {request.status}
                       </span>
-                      {request.status === "submitted" && (
+                      {request.status === 'submitted' && (
                         <div className="flex gap-2 ml-6">
                           <button
                             onClick={() => {
-                              setSelectedAction("approve");
+                              setSelectedAction('approve');
                               setSelectedRequest(request);
                               setShowConfirm(true);
                             }}
@@ -215,7 +215,7 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
                           </button>
                           <button
                             onClick={() => {
-                              setSelectedAction("reject");
+                              setSelectedAction('reject');
                               setSelectedRequest(request);
                               setShowConfirm(true);
                             }}
@@ -243,7 +243,7 @@ export function TimeOffApprovalContent({}: TimeOffApprovalContentProps) {
           setSelectedRequest(null);
         }}
         onConfirm={handleAction}
-        title={`${selectedAction === "approve" ? "Approve" : "Reject"} Request`}
+        title={`${selectedAction === 'approve' ? 'Approve' : 'Reject'} Request`}
         message={`Are you sure you want to ${selectedAction} this request from ${selectedRequest?.user.full_name}?`}
       />
 

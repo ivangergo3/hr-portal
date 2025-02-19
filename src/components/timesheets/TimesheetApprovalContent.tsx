@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { LuCheck, LuX, LuClipboardList } from "react-icons/lu";
-import type { TimesheetStatus } from "@/types/database.types";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { LuCheck, LuX, LuClipboardList } from 'react-icons/lu';
+import type { TimesheetStatus } from '@/types/database.types';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimesheetApprovalContentProps {
   userId: string;
@@ -36,18 +36,18 @@ export function TimesheetApprovalContent({
 }: TimesheetApprovalContentProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [timesheets, setTimesheets] = useState<TimesheetResponse[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"all" | TimesheetStatus>(
-    "submitted"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimesheetStatus>(
+    'submitted',
   );
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedAction, setSelectedAction] = useState<
-    "approve" | "reject" | null
+    'approve' | 'reject' | null
   >(null);
   const [selectedTimesheet, setSelectedTimesheet] =
     useState<TimesheetResponse | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const supabase = createClient();
   const router = useRouter();
@@ -57,7 +57,7 @@ export function TimesheetApprovalContent({
       try {
         setIsLoading(true);
         const query = supabase
-          .from("timesheet_weeks")
+          .from('timesheet_weeks')
           .select(
             `
             id,
@@ -72,19 +72,19 @@ export function TimesheetApprovalContent({
               full_name,
               email
             )
-          `
+          `,
           )
-          .eq("week_start_date", selectedWeek.toISOString().split("T")[0])
-          .order("created_at", { ascending: false });
+          .eq('week_start_date', selectedWeek.toISOString().split('T')[0])
+          .order('created_at', { ascending: false });
 
-        if (statusFilter !== "all") {
-          query.eq("status", statusFilter);
+        if (statusFilter !== 'all') {
+          query.eq('status', statusFilter);
         }
 
         const { data, error } = await query;
 
         if (error) {
-          console.error("[TimesheetApproval] Fetch error:", error);
+          console.error('[TimesheetApproval] Fetch error:', error);
           return;
         }
 
@@ -103,12 +103,12 @@ export function TimesheetApprovalContent({
     try {
       setIsLoading(true);
       const { error } = await supabase
-        .from("timesheet_weeks")
+        .from('timesheet_weeks')
         .update({
-          status: selectedAction === "approve" ? "approved" : "rejected",
+          status: selectedAction === 'approve' ? 'approved' : 'rejected',
           updated_at: new Date().toISOString(),
         })
-        .eq("id", selectedTimesheet.id);
+        .eq('id', selectedTimesheet.id);
 
       if (error) throw error;
 
@@ -117,23 +117,23 @@ export function TimesheetApprovalContent({
           t.id === selectedTimesheet.id
             ? {
                 ...t,
-                status: selectedAction === "approve" ? "approved" : "rejected",
+                status: selectedAction === 'approve' ? 'approved' : 'rejected',
               }
-            : t
-        )
+            : t,
+        ),
       );
 
       setNotification({
         message: `Timesheet ${
-          selectedAction === "approve" ? "approved" : "rejected"
+          selectedAction === 'approve' ? 'approved' : 'rejected'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[TimesheetApproval] Action error:", error);
+      console.error('[TimesheetApproval] Action error:', error);
       setNotification({
-        message: "Failed to process timesheet",
-        type: "error",
+        message: 'Failed to process timesheet',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -160,7 +160,7 @@ export function TimesheetApprovalContent({
           <select
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(e.target.value as "all" | TimesheetStatus)
+              setStatusFilter(e.target.value as 'all' | TimesheetStatus)
             }
             className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900"
           >
@@ -209,7 +209,7 @@ export function TimesheetApprovalContent({
                     {timesheet.user.full_name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                    {format(new Date(timesheet.week_start_date), "MMM d, yyyy")}
+                    {format(new Date(timesheet.week_start_date), 'MMM d, yyyy')}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
                     {timesheet.total_hours}
@@ -218,13 +218,13 @@ export function TimesheetApprovalContent({
                     <div className="flex items-center justify-between">
                       <span
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                          timesheet.status === "submitted"
-                            ? "bg-yellow-50 text-yellow-700"
-                            : timesheet.status === "approved"
-                            ? "bg-green-50 text-green-700"
-                            : timesheet.status === "rejected"
-                            ? "bg-red-50 text-red-700"
-                            : "bg-slate-100 text-slate-700"
+                          timesheet.status === 'submitted'
+                            ? 'bg-yellow-50 text-yellow-700'
+                            : timesheet.status === 'approved'
+                              ? 'bg-green-50 text-green-700'
+                              : timesheet.status === 'rejected'
+                                ? 'bg-red-50 text-red-700'
+                                : 'bg-slate-100 text-slate-700'
                         }`}
                       >
                         {timesheet.status}
@@ -234,7 +234,7 @@ export function TimesheetApprovalContent({
                           onClick={() => {
                             // Open review modal/page
                             router.push(
-                              `/admin/timesheets/${timesheet.id}/review`
+                              `/admin/timesheets/${timesheet.id}/review`,
                             );
                           }}
                           className="text-slate-600 hover:text-slate-800"
@@ -242,11 +242,11 @@ export function TimesheetApprovalContent({
                         >
                           <LuClipboardList className="h-4 w-4" />
                         </button>
-                        {timesheet.status === "submitted" && (
+                        {timesheet.status === 'submitted' && (
                           <div className="flex gap-2 ml-6">
                             <button
                               onClick={() => {
-                                setSelectedAction("approve");
+                                setSelectedAction('approve');
                                 setSelectedTimesheet(timesheet);
                                 setShowConfirm(true);
                               }}
@@ -257,7 +257,7 @@ export function TimesheetApprovalContent({
                             </button>
                             <button
                               onClick={() => {
-                                setSelectedAction("reject");
+                                setSelectedAction('reject');
                                 setSelectedTimesheet(timesheet);
                                 setShowConfirm(true);
                               }}
@@ -287,7 +287,7 @@ export function TimesheetApprovalContent({
         }}
         onConfirm={handleAction}
         title={`${
-          selectedAction === "approve" ? "Approve" : "Reject"
+          selectedAction === 'approve' ? 'Approve' : 'Reject'
         } Timesheet`}
         message={`Are you sure you want to ${selectedAction} this timesheet from ${selectedTimesheet?.user.full_name}?`}
       />

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { LuLoader } from "react-icons/lu";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from 'react';
+import { LuLoader } from 'react-icons/lu';
+import { createClient } from '@/utils/supabase/client';
 export default function SignInButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,20 +14,20 @@ export default function SignInButton() {
       setError(null);
 
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: 'google',
         options: {
           redirectTo: `${location.origin}/auth/callback`,
         },
       });
 
       if (error) {
-        console.error("[SignIn] OAuth error:", error.message);
-        setError("Failed to initiate sign in. Please try again.");
+        console.error('[SignIn] OAuth error:', error.message);
+        setError('Failed to initiate sign in. Please try again.');
         return;
       }
     } catch (error) {
-      console.error("[SignIn] Unexpected error:", error);
-      setError("An unexpected error occurred. Please try again.");
+      console.error('[SignIn] Unexpected error:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -43,7 +43,7 @@ export default function SignInButton() {
         {isLoading ? (
           <LuLoader className="h-4 w-4 animate-spin" />
         ) : (
-          "Sign in with Google"
+          'Sign in with Google'
         )}
       </button>
 

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import type { Project } from "@/types/database.types";
-import { format } from "date-fns";
-import { LuArchive } from "react-icons/lu";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { AddProjectModal } from "./AddProjectModal";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import type { Project } from '@/types/database.types';
+import { format } from 'date-fns';
+import { LuArchive } from 'react-icons/lu';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { AddProjectModal } from './AddProjectModal';
+import { createClient } from '@/utils/supabase/client';
 
 export const ProjectsContent = forwardRef<
   { refresh: () => void },
@@ -19,7 +19,7 @@ export const ProjectsContent = forwardRef<
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const supabase = createClient();
@@ -28,7 +28,7 @@ export const ProjectsContent = forwardRef<
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from("projects")
+        .from('projects')
         .select(
           `
           *,
@@ -36,18 +36,18 @@ export const ProjectsContent = forwardRef<
             id,
             name
           )
-        `
+        `,
         )
-        .eq("archived", showArchived)
-        .order("name");
+        .eq('archived', showArchived)
+        .order('name');
 
       if (error) throw error;
       setProjects(data || []);
     } catch (error) {
-      console.error("[Projects] Fetch error:", error);
+      console.error('[Projects] Fetch error:', error);
       setNotification({
-        message: "Failed to load projects",
-        type: "error",
+        message: 'Failed to load projects',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -68,24 +68,24 @@ export const ProjectsContent = forwardRef<
     try {
       setIsLoading(true);
       const { error } = await supabase
-        .from("projects")
+        .from('projects')
         .update({ archived: !showArchived })
-        .eq("id", selectedProject.id);
+        .eq('id', selectedProject.id);
 
       if (error) throw error;
 
       setProjects(projects.filter((p) => p.id !== selectedProject.id));
       setNotification({
         message: `Project ${
-          showArchived ? "unarchived" : "archived"
+          showArchived ? 'unarchived' : 'archived'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[Projects] Archive error:", error);
+      console.error('[Projects] Archive error:', error);
       setNotification({
-        message: "Failed to update project",
-        type: "error",
+        message: 'Failed to update project',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -148,7 +148,7 @@ export const ProjectsContent = forwardRef<
                     {project.client?.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                    {format(new Date(project.created_at), "MMM d, yyyy")}
+                    {format(new Date(project.created_at), 'MMM d, yyyy')}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div className="flex justify-end gap-2">
@@ -177,9 +177,9 @@ export const ProjectsContent = forwardRef<
           setSelectedProject(null);
         }}
         onConfirm={handleArchive}
-        title={showArchived ? "Unarchive Project" : "Archive Project"}
+        title={showArchived ? 'Unarchive Project' : 'Archive Project'}
         message={`Are you sure you want to ${
-          showArchived ? "unarchive" : "archive"
+          showArchived ? 'unarchive' : 'archive'
         } ${selectedProject?.name}?`}
       />
 
@@ -200,4 +200,4 @@ export const ProjectsContent = forwardRef<
   );
 });
 
-ProjectsContent.displayName = "ProjectsContent";
+ProjectsContent.displayName = 'ProjectsContent';

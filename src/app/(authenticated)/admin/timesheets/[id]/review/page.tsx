@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import TimesheetReviewWrapper from "@/components/timesheets/TimesheetReviewWrapper";
-import { createClientServer } from "@/utils/supabase/server";
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import TimesheetReviewWrapper from '@/components/timesheets/TimesheetReviewWrapper';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimesheetReviewPage({
   params,
@@ -13,7 +13,7 @@ export default async function TimesheetReviewPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
+  if (!user) redirect('/');
 
   return (
     <div>

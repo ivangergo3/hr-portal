@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { format } from "date-fns";
-import type { Role, User } from "@/types/database.types";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import React from 'react';
+import { format } from 'date-fns';
+import type { Role, User } from '@/types/database.types';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 type UsersTableProps = {
   users: User[];
 };
@@ -16,14 +16,14 @@ export function UsersTable({ users }: UsersTableProps) {
   const handleRoleChange = async (userId: string, newRole: Role) => {
     try {
       const { error } = await supabase
-        .from("users")
+        .from('users')
         .update({ role: newRole })
-        .eq("id", userId);
+        .eq('id', userId);
 
       if (error) throw error;
       router.refresh();
     } catch (error) {
-      console.error("[UsersTable] Role update error:", error);
+      console.error('[UsersTable] Role update error:', error);
     }
   };
 
@@ -51,7 +51,7 @@ export function UsersTable({ users }: UsersTableProps) {
             {users.map((user) => (
               <tr key={user.id} className="hover:bg-slate-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                  {user.full_name || "N/A"}
+                  {user.full_name || 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {user.email}
@@ -69,7 +69,7 @@ export function UsersTable({ users }: UsersTableProps) {
                   </select>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                  {format(new Date(user.created_at), "MMM d, yyyy")}
+                  {format(new Date(user.created_at), 'MMM d, yyyy')}
                 </td>
               </tr>
             ))}

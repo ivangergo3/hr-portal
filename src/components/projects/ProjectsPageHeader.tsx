@@ -1,4 +1,4 @@
-import { LuPlus } from "react-icons/lu";
+import { LuPlus } from 'react-icons/lu';
 
 type ProjectsPageHeaderProps = {
   showArchived: boolean;
@@ -20,19 +20,19 @@ export function ProjectsPageHeader({
             <p className="mt-1 text-sm text-slate-600">
               {showArchived
                 ? `${archivedCount} archived project${
-                    archivedCount !== 1 ? "s" : ""
+                    archivedCount !== 1 ? 's' : ''
                   }`
                 : `${activeCount} active project${
-                    activeCount !== 1 ? "s" : ""
+                    activeCount !== 1 ? 's' : ''
                   } in the system`}
             </p>
           </div>
           <div className="flex items-center gap-4">
             <a
-              href={showArchived ? "/projects" : "/projects?archived=true"}
+              href={showArchived ? '/projects' : '/projects?archived=true'}
               className="text-sm font-medium text-slate-500 hover:text-slate-700"
             >
-              {showArchived ? "← Active Projects" : "Show Archived"}
+              {showArchived ? '← Active Projects' : 'Show Archived'}
             </a>
             <button
               data-modal-target="add-project"

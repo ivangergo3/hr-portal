@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { User, Role } from "@/types/database.types";
-import { LuLoader } from "react-icons/lu";
-import { format } from "date-fns";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from 'react';
+import { User, Role } from '@/types/database.types';
+import { LuLoader } from 'react-icons/lu';
+import { format } from 'date-fns';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { createClient } from '@/utils/supabase/client';
 interface UsersListProps {
   users: User[];
   currentUserId: string;
@@ -20,7 +20,7 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
 
   const supabase = createClient();
@@ -31,23 +31,23 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
       setError(null);
 
       const { error: updateError } = await supabase
-        .from("users")
+        .from('users')
         .update({ role: newRole })
-        .eq("id", userId);
+        .eq('id', userId);
 
       if (updateError) {
-        console.error("[UsersList] Role update error:", updateError.message);
-        setError("Failed to update user role");
+        console.error('[UsersList] Role update error:', updateError.message);
+        setError('Failed to update user role');
         return;
       }
 
       setNotification({
-        message: "User role updated successfully",
-        type: "success",
+        message: 'User role updated successfully',
+        type: 'success',
       });
     } catch (error) {
-      console.error("[UsersList] Update error:", error);
-      setError("An unexpected error occurred");
+      console.error('[UsersList] Update error:', error);
+      setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -58,15 +58,15 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
 
     try {
       const { error } = await supabase
-        .from("users")
+        .from('users')
         .update({ role: newRole })
-        .eq("id", selectedUser.id);
+        .eq('id', selectedUser.id);
 
       if (error) throw error;
 
       setNotification({
-        message: "User role updated successfully",
-        type: "success",
+        message: 'User role updated successfully',
+        type: 'success',
       });
 
       // Refresh the page to show updated data
@@ -74,10 +74,10 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
         window.location.reload();
       }, 1500);
     } catch (error) {
-      console.error("Error updating user role:", error);
+      console.error('Error updating user role:', error);
       setNotification({
-        message: "Failed to update user role",
-        type: "error",
+        message: 'Failed to update user role',
+        type: 'error',
       });
     } finally {
       setShowConfirm(false);
@@ -151,8 +151,8 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
                         }
                         className={`rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900 ${
                           user.id === currentUserId
-                            ? "cursor-not-allowed opacity-50"
-                            : ""
+                            ? 'cursor-not-allowed opacity-50'
+                            : ''
                         }`}
                         disabled={user.id === currentUserId}
                       >
@@ -161,7 +161,7 @@ export default function UsersList({ users, currentUserId }: UsersListProps) {
                       </select>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                      {format(new Date(user.created_at), "MMM d, yyyy")}
+                      {format(new Date(user.created_at), 'MMM d, yyyy')}
                     </td>
                   </tr>
                 ))}

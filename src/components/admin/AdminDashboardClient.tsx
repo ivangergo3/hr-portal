@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import AdminDashboard from "@/components/admin/AdminDashboard";
-import { startOfMonth, endOfMonth } from "date-fns";
-import type { DashboardMetrics } from "@/components/admin/AdminDashboard";
-import DataErrorBoundary from "@/components/common/DataErrorBoundary";
-import type { Timesheet } from "@/components/admin/AdminDashboard";
-import { PostgrestError } from "@supabase/supabase-js";
-import { createClientServer } from "@/utils/supabase/server";
+import React, { useState, useEffect } from 'react';
+import AdminDashboard from '@/components/admin/AdminDashboard';
+import { startOfMonth, endOfMonth } from 'date-fns';
+import type { DashboardMetrics } from '@/components/admin/AdminDashboard';
+import DataErrorBoundary from '@/components/common/DataErrorBoundary';
+import type { Timesheet } from '@/components/admin/AdminDashboard';
+import { PostgrestError } from '@supabase/supabase-js';
+import { createClientServer } from '@/utils/supabase/server';
 type TimesheetResponse = {
   id: string;
   total_hours: number;
@@ -37,7 +37,7 @@ export default function AdminDashboardClient() {
   const [dateRange, setDateRange] = useState(defaultDateRange);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [timesheets, setTimesheets] = useState<TimesheetResponse[] | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -47,24 +47,24 @@ export default function AdminDashboardClient() {
       try {
         // Get dashboard metrics
         const { data: metrics, error: metricsError } = await supabase.rpc(
-          "get_dashboard_metrics",
+          'get_dashboard_metrics',
           {
             start_date: dateRange.from,
             end_date: dateRange.to,
-          }
+          },
         );
 
         if (metricsError) {
           console.error(
-            "[Admin Dashboard] Metrics error:",
-            metricsError.message
+            '[Admin Dashboard] Metrics error:',
+            metricsError.message,
           );
           throw metricsError;
         }
 
         // Get timesheets with related data
         const { data: timesheets, error: timesheetsError } = (await supabase
-          .from("timesheets")
+          .from('timesheets')
           .select(
             `
             id,
@@ -84,18 +84,18 @@ export default function AdminDashboardClient() {
               status,
               week_start_date
             )
-          `
+          `,
           )
-          .gte("week_start_date", dateRange.from.toISOString())
-          .lte("week_start_date", dateRange.to.toISOString())) as {
+          .gte('week_start_date', dateRange.from.toISOString())
+          .lte('week_start_date', dateRange.to.toISOString())) as {
           data: TimesheetResponse[] | null;
           error: PostgrestError | null;
         };
 
         if (timesheetsError) {
           console.error(
-            "[Admin Dashboard] Timesheet error:",
-            timesheetsError.message
+            '[Admin Dashboard] Timesheet error:',
+            timesheetsError.message,
           );
           throw timesheetsError;
         }
@@ -103,7 +103,7 @@ export default function AdminDashboardClient() {
         setMetrics(metrics);
         setTimesheets(timesheets);
       } catch (error) {
-        console.error("[Admin Dashboard] Data fetch error:", error);
+        console.error('[Admin Dashboard] Data fetch error:', error);
       }
     }
 
@@ -127,8 +127,8 @@ export default function AdminDashboardClient() {
             ?.map((t: TimesheetResponse) => {
               if (!t.project || !t.user || !t.timesheet_week) {
                 console.warn(
-                  "[Admin Dashboard] Skipping invalid timesheet entry:",
-                  t
+                  '[Admin Dashboard] Skipping invalid timesheet entry:',
+                  t,
                 );
                 return null;
               }
@@ -137,7 +137,7 @@ export default function AdminDashboardClient() {
                 ...t,
                 project: {
                   ...t.project,
-                  client: t.project.client || { name: "Unknown Client" },
+                  client: t.project.client || { name: 'Unknown Client' },
                 },
                 user: t.user,
                 timesheet_week: t.timesheet_week,

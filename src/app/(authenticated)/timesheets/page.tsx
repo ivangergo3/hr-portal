@@ -1,8 +1,8 @@
-import { redirect } from "next/navigation";
-import { TimesheetLayout } from "@/components/timesheets/TimesheetLayout";
-import { startOfWeek, parseISO } from "date-fns";
-import type { PageProps } from "@/types/next.types";
-import { createClientServer } from "@/utils/supabase/server";
+import { redirect } from 'next/navigation';
+import { TimesheetLayout } from '@/components/timesheets/TimesheetLayout';
+import { startOfWeek, parseISO } from 'date-fns';
+import type { PageProps } from '@/types/next.types';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimesheetsPage({ searchParams }: PageProps) {
   const supabase = await createClientServer();
@@ -13,7 +13,7 @@ export default async function TimesheetsPage({ searchParams }: PageProps) {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    if (authError || !user) redirect("/");
+    if (authError || !user) redirect('/');
 
     // Get selected week
     const selectedWeek = searchParams.week
@@ -27,19 +27,19 @@ export default async function TimesheetsPage({ searchParams }: PageProps) {
       { data: timesheets },
       { data: timesheetWeeks },
     ] = await Promise.all([
-      supabase.from("users").select("*").eq("id", user.id).single(),
-      supabase.from("projects").select("*, clients(*)").throwOnError(),
+      supabase.from('users').select('*').eq('id', user.id).single(),
+      supabase.from('projects').select('*, clients(*)').throwOnError(),
       supabase
-        .from("timesheets")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("week_start_date", selectedWeek.toISOString())
+        .from('timesheets')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('week_start_date', selectedWeek.toISOString())
         .throwOnError(),
       supabase
-        .from("timesheet_weeks")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("week_start_date", selectedWeek.toISOString())
+        .from('timesheet_weeks')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('week_start_date', selectedWeek.toISOString())
         .throwOnError(),
     ]);
 
@@ -48,12 +48,12 @@ export default async function TimesheetsPage({ searchParams }: PageProps) {
         user={dbUser}
         projects={projects || []}
         weekStart={selectedWeek}
-        weekStatus={timesheetWeeks?.[0]?.status || "draft"}
+        weekStatus={timesheetWeeks?.[0]?.status || 'draft'}
         timesheets={timesheets || []}
       />
     );
   } catch (error) {
-    console.error("[Timesheets] Error:", error);
-    redirect("/error?code=timesheet_load_failed");
+    console.error('[Timesheets] Error:', error);
+    redirect('/error?code=timesheet_load_failed');
   }
 }

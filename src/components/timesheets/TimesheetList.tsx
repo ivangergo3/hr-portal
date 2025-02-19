@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   TimesheetWeekWithRelations,
   TimesheetStatus,
-} from "@/types/database.types";
-import { LuLoader } from "react-icons/lu";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
+} from '@/types/database.types';
+import { LuLoader } from 'react-icons/lu';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
 
 interface TimesheetListProps {
   timesheets: TimesheetWeekWithRelations[];
 }
 
 export default function TimesheetList({ timesheets }: TimesheetListProps) {
-  const [statusFilter, setStatusFilter] = useState<"all" | TimesheetStatus>(
-    "all"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimesheetStatus>(
+    'all',
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,7 +38,7 @@ export default function TimesheetList({ timesheets }: TimesheetListProps) {
   }
 
   const filteredTimesheets =
-    statusFilter === "all"
+    statusFilter === 'all'
       ? timesheets
       : timesheets.filter((timesheet) => timesheet.status === statusFilter);
 
@@ -48,7 +48,7 @@ export default function TimesheetList({ timesheets }: TimesheetListProps) {
         <select
           value={statusFilter}
           onChange={(e) =>
-            setStatusFilter(e.target.value as "all" | TimesheetStatus)
+            setStatusFilter(e.target.value as 'all' | TimesheetStatus)
           }
           className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500"
           disabled={isLoading}

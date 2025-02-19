@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import type { User } from "@/types/database.types";
-import { LuSave, LuLoader } from "react-icons/lu";
-import Notification from "@/components/common/Notification";
-import { SupabaseError } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import React, { useState } from 'react';
+import type { User } from '@/types/database.types';
+import { LuSave, LuLoader } from 'react-icons/lu';
+import Notification from '@/components/common/Notification';
+import { SupabaseError } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 
 interface ProfileFormProps {
   user: User;
@@ -19,14 +19,14 @@ export function ProfileForm({
   onSuccess,
 }: ProfileFormProps) {
   const [formData, setFormData] = useState({
-    full_name: initialProfile.full_name || "",
-    email: initialProfile.email || "",
+    full_name: initialProfile.full_name || '',
+    email: initialProfile.email || '',
   });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
 
   const supabase = createClient();
@@ -41,22 +41,22 @@ export function ProfileForm({
       const { error: updateError } = await (
         await supabase
       )
-        .from("users")
+        .from('users')
         .update({
           full_name: formData.full_name,
           // Add other fields as needed
         })
-        .eq("id", user.id);
+        .eq('id', user.id);
 
       if (updateError) {
-        console.error("[ProfileForm] Update error:", updateError.message);
-        setError("Failed to update profile. Please try again.");
+        console.error('[ProfileForm] Update error:', updateError.message);
+        setError('Failed to update profile. Please try again.');
         return;
       }
 
       setNotification({
-        message: "Profile updated successfully",
-        type: "success",
+        message: 'Profile updated successfully',
+        type: 'success',
       });
 
       if (onSuccess) {
@@ -64,23 +64,23 @@ export function ProfileForm({
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("[ProfileForm] Error:", error.message);
+        console.error('[ProfileForm] Error:', error.message);
       } else if (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "code" in error &&
-        "message" in error
+        'code' in error &&
+        'message' in error
       ) {
         const dbError = error as SupabaseError;
-        console.error("[ProfileForm] Database error:", {
+        console.error('[ProfileForm] Database error:', {
           code: dbError.code,
           message: dbError.message,
           details: dbError.details,
         });
       } else {
-        console.error("[ProfileForm] Unknown error:", error);
+        console.error('[ProfileForm] Unknown error:', error);
       }
-      setError("An unexpected error occurred. Please try again.");
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSaving(false);
     }

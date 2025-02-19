@@ -1,16 +1,16 @@
-import { Suspense } from "react";
-import { createClientServer } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { DashboardHeader } from "@/components/admin/DashboardHeader";
-import { DashboardContent } from "@/components/admin/DashboardContent";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
+import { Suspense } from 'react';
+import { createClientServer } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
+import { DashboardHeader } from '@/components/admin/DashboardHeader';
+import { DashboardContent } from '@/components/admin/DashboardContent';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 
 async function getInitialData() {
   const supabase = await createClientServer();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  if (!user) redirect('/');
 
   const [
     { count: totalUsers },
@@ -19,17 +19,17 @@ async function getInitialData() {
     { count: pendingTimeoffs },
     { data: timeEntries },
   ] = await Promise.all([
-    supabase.from("users").select("*", { count: "exact", head: true }),
-    supabase.from("projects").select("*", { count: "exact", head: true }),
+    supabase.from('users').select('*', { count: 'exact', head: true }),
+    supabase.from('projects').select('*', { count: 'exact', head: true }),
     supabase
-      .from("timesheet_weeks")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "submitted"),
+      .from('timesheet_weeks')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'submitted'),
     supabase
-      .from("time_off_requests")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "submitted"),
-    supabase.from("timesheet_weeks").select("total_hours"),
+      .from('time_off_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'submitted'),
+    supabase.from('timesheet_weeks').select('total_hours'),
   ]);
 
   const totalHours =

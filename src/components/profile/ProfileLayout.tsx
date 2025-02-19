@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { ProfileForm } from "@/components/profile/ProfileForm";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import type { User } from "@/types/database.types";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProfileForm } from '@/components/profile/ProfileForm';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import type { User } from '@/types/database.types';
 
 type ProfileLayoutProps = {
   user: User;

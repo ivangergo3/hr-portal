@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { LuLoader } from "react-icons/lu";
-import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { LuLoader } from 'react-icons/lu';
+import { useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,7 @@ export default function LoginForm() {
       setError(null);
 
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: 'google',
         options: {
           redirectTo: `${location.origin}/auth/callback`,
         },
@@ -25,11 +25,11 @@ export default function LoginForm() {
         throw error;
       }
     } catch (error) {
-      console.error("[LoginForm] Auth error:", error);
+      console.error('[LoginForm] Auth error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to sign in with Google. Please try again."
+          : 'Failed to sign in with Google. Please try again.',
       );
     } finally {
       setIsLoading(false);

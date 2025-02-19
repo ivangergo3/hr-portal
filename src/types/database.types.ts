@@ -1,6 +1,6 @@
-import type { User as AuthUser } from "@supabase/auth-js";
+import type { User as AuthUser } from '@supabase/auth-js';
 
-export type Role = "admin" | "employee";
+export type Role = 'admin' | 'employee';
 
 export interface User {
   id: string;
@@ -25,8 +25,8 @@ export interface Timesheet {
   sunday_hours: number;
 }
 
-export type TimeOffType = "vacation" | "sick" | "personal" | "other";
-export type TimeOffStatus = "draft" | "submitted" | "approved" | "rejected";
+export type TimeOffType = 'vacation' | 'sick' | 'personal' | 'other';
+export type TimeOffStatus = 'draft' | 'submitted' | 'approved' | 'rejected';
 
 export interface TimeOffRequest {
   id: string;
@@ -73,7 +73,7 @@ export interface TimesheetWithRelations extends Timesheet {
   sunday_hours: number;
 }
 
-export type TimesheetStatus = "draft" | "submitted" | "approved" | "rejected";
+export type TimesheetStatus = 'draft' | 'submitted' | 'approved' | 'rejected';
 
 export interface TimesheetWeek {
   id: string;

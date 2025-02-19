@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Timesheet, ApiResponse } from "@/types/database.types";
-import { validateHours, PATTERNS, LIMITS } from "@/utils/validation";
-import { withRetry } from "@/utils/apiRetry";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from 'react';
+import { Timesheet, ApiResponse } from '@/types/database.types';
+import { validateHours, PATTERNS, LIMITS } from '@/utils/validation';
+import { withRetry } from '@/utils/apiRetry';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
+import { createClient } from '@/utils/supabase/client';
 
 type TimesheetResponse = ApiResponse<{ id: string }>;
 
@@ -46,7 +46,7 @@ export default function TimesheetEntry({
   };
 
   const handleHourChange = (day: keyof typeof hours, value: string) => {
-    if (value === "" || validateHourInput(value)) {
+    if (value === '' || validateHourInput(value)) {
       setHours((prev) => ({ ...prev, [day]: value }));
       setError(null);
     }
@@ -54,8 +54,8 @@ export default function TimesheetEntry({
 
   const handleBlur = (day: keyof typeof hours) => {
     const value = hours[day];
-    if (value === "") {
-      setHours((prev) => ({ ...prev, [day]: "0" }));
+    if (value === '') {
+      setHours((prev) => ({ ...prev, [day]: '0' }));
     } else {
       // Format to 2 decimal places if needed
       const formatted = parseFloat(value).toFixed(2);
@@ -78,7 +78,7 @@ export default function TimesheetEntry({
       await withRetry(
         async () => {
           const { error: updateError } = (await supabase
-            .from("timesheets")
+            .from('timesheets')
             .update({
               monday_hours: parseFloat(hours.monday) || 0,
               tuesday_hours: parseFloat(hours.tuesday) || 0,
@@ -89,7 +89,7 @@ export default function TimesheetEntry({
               sunday_hours: parseFloat(hours.sunday) || 0,
               updated_at: new Date().toISOString(),
             })
-            .eq("id", timesheet.id)) as TimesheetResponse;
+            .eq('id', timesheet.id)) as TimesheetResponse;
 
           if (updateError) throw updateError;
           return true;
@@ -98,16 +98,16 @@ export default function TimesheetEntry({
           maxAttempts: 3,
           delayMs: 1000,
           backoff: true,
-        }
+        },
       );
 
       onUpdate();
     } catch (error) {
-      console.error("[TimesheetEntry] Update error:", error);
+      console.error('[TimesheetEntry] Update error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to update hours. Please try again."
+          : 'Failed to update hours. Please try again.',
       );
     } finally {
       setIsUpdating(false);

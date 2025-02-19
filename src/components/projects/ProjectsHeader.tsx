@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { LuPlus } from "react-icons/lu";
-import { AddProjectModal } from "./AddProjectModal";
+import { useState } from 'react';
+import { LuPlus } from 'react-icons/lu';
+import { AddProjectModal } from './AddProjectModal';
 
 export function ProjectsHeader({
   showArchived,
@@ -39,8 +39,8 @@ export function ProjectsHeader({
             className="text-sm font-medium text-slate-500 hover:text-slate-700"
           >
             {showArchived
-              ? "← Back to Active Projects"
-              : "Show Archived Projects"}
+              ? '← Back to Active Projects'
+              : 'Show Archived Projects'}
           </button>
         </div>
       </div>

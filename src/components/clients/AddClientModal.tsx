@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { LuLoader } from "react-icons/lu";
-import Modal from "@/components/common/Modal";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from 'react';
+import { LuLoader } from 'react-icons/lu';
+import Modal from '@/components/common/Modal';
+import { createClient } from '@/utils/supabase/client';
 
 interface AddClientModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ export function AddClientModal({
   onClose,
   onSuccess,
 }: AddClientModalProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const supabase = createClient();
@@ -24,7 +24,7 @@ export function AddClientModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Client name is required");
+      setError('Client name is required');
       return;
     }
 
@@ -33,24 +33,24 @@ export function AddClientModal({
       setError(null);
 
       const { error: insertError } = await supabase
-        .from("clients")
+        .from('clients')
         .insert([{ name: name.trim() }]);
 
       if (insertError) throw insertError;
 
-      setName("");
+      setName('');
       handleClose();
       onSuccess?.();
     } catch (error) {
-      console.error("[AddClient] Submit error:", error);
-      setError("Failed to add client. Please try again.");
+      console.error('[AddClient] Submit error:', error);
+      setError('Failed to add client. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    setName("");
+    setName('');
     setError(null);
     onClose();
   };
@@ -101,7 +101,7 @@ export function AddClientModal({
             {isSubmitting ? (
               <LuLoader className="h-4 w-4 animate-spin" />
             ) : (
-              "Add Client"
+              'Add Client'
             )}
           </button>
         </div>

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import TimeOffRequestList from "./TimeOffRequestList";
-import TimeOffRequestForm from "./TimeOffRequestForm";
-import type { TimeOffRequestWithUser } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from 'react';
+import TimeOffRequestList from './TimeOffRequestList';
+import TimeOffRequestForm from './TimeOffRequestForm';
+import type { TimeOffRequestWithUser } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimeOffContentProps {
   userId: string;
@@ -21,7 +21,7 @@ export function TimeOffContent({ userId }: TimeOffContentProps) {
       try {
         setIsLoading(true);
         const { data } = await supabase
-          .from("time_off_requests")
+          .from('time_off_requests')
           .select(
             `
             *,
@@ -31,9 +31,9 @@ export function TimeOffContent({ userId }: TimeOffContentProps) {
               full_name,
               role
             )
-          `
+          `,
           )
-          .order("created_at", { ascending: false });
+          .order('created_at', { ascending: false });
 
         setRequests(data || []);
       } finally {
@@ -51,8 +51,8 @@ export function TimeOffContent({ userId }: TimeOffContentProps) {
         setShowForm(true);
       }
     };
-    document.addEventListener("click", handleModalTrigger);
-    return () => document.removeEventListener("click", handleModalTrigger);
+    document.addEventListener('click', handleModalTrigger);
+    return () => document.removeEventListener('click', handleModalTrigger);
   }, []);
 
   const handleEdit = () => {

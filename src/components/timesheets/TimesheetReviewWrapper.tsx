@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { TimesheetReviewHeader } from "./TimesheetReviewHeader";
-import TimesheetReview from "@/components/admin/TimesheetReview";
-import type { TimesheetWeekWithRelations } from "@/types/database.types";
-import Notification from "@/components/common/Notification";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { TimesheetReviewHeader } from './TimesheetReviewHeader';
+import TimesheetReview from '@/components/admin/TimesheetReview';
+import type { TimesheetWeekWithRelations } from '@/types/database.types';
+import Notification from '@/components/common/Notification';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import { createClient } from '@/utils/supabase/client';
 
 interface TimesheetReviewWrapperProps {
   timesheetId: string;
@@ -18,16 +18,16 @@ export default function TimesheetReviewWrapper({
   timesheetId,
 }: TimesheetReviewWrapperProps) {
   const [timesheet, setTimesheet] = useState<TimesheetWeekWithRelations | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedAction, setSelectedAction] = useState<
-    "approve" | "reject" | null
+    'approve' | 'reject' | null
   >(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function TimesheetReviewWrapper({
       try {
         setIsLoading(true);
         const { data, error } = await supabase
-          .from("timesheet_weeks")
+          .from('timesheet_weeks')
           .select(
             `
             *,
@@ -63,18 +63,18 @@ export default function TimesheetReviewWrapper({
                 )
               )
             )
-          `
+          `,
           )
-          .eq("id", timesheetId)
+          .eq('id', timesheetId)
           .single();
 
         if (error) throw error;
         setTimesheet(data);
       } catch (error) {
-        console.error("[TimesheetReview] Fetch error:", error);
+        console.error('[TimesheetReview] Fetch error:', error);
         setNotification({
-          message: "Failed to load timesheet",
-          type: "error",
+          message: 'Failed to load timesheet',
+          type: 'error',
         });
       } finally {
         setIsLoading(false);
@@ -90,28 +90,28 @@ export default function TimesheetReviewWrapper({
     try {
       setIsActionLoading(true);
       const { error } = await supabase
-        .from("timesheet_weeks")
+        .from('timesheet_weeks')
         .update({
-          status: selectedAction === "approve" ? "approved" : "rejected",
+          status: selectedAction === 'approve' ? 'approved' : 'rejected',
           updated_at: new Date().toISOString(),
         })
-        .eq("id", timesheet.id);
+        .eq('id', timesheet.id);
 
       if (error) throw error;
 
       setNotification({
         message: `Timesheet ${
-          selectedAction === "approve" ? "approved" : "rejected"
+          selectedAction === 'approve' ? 'approved' : 'rejected'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
 
-      router.push("/admin/timesheets");
+      router.push('/admin/timesheets');
     } catch (error) {
-      console.error("[TimesheetReview] Action error:", error);
+      console.error('[TimesheetReview] Action error:', error);
       setNotification({
-        message: "Failed to process timesheet",
-        type: "error",
+        message: 'Failed to process timesheet',
+        type: 'error',
       });
     } finally {
       setIsActionLoading(false);
@@ -138,13 +138,13 @@ export default function TimesheetReviewWrapper({
 
       <TimesheetReviewHeader
         timesheet={timesheet}
-        onBack={() => router.push("/admin/timesheets")}
+        onBack={() => router.push('/admin/timesheets')}
         onApprove={() => {
-          setSelectedAction("approve");
+          setSelectedAction('approve');
           setShowConfirm(true);
         }}
         onReject={() => {
-          setSelectedAction("reject");
+          setSelectedAction('reject');
           setShowConfirm(true);
         }}
         isLoading={isLoading}
@@ -159,7 +159,7 @@ export default function TimesheetReviewWrapper({
         }}
         onConfirm={handleAction}
         title={`${
-          selectedAction === "approve" ? "Approve" : "Reject"
+          selectedAction === 'approve' ? 'Approve' : 'Reject'
         } Timesheet`}
         message={`Are you sure you want to ${selectedAction} this timesheet from ${timesheet?.user.full_name}?`}
       />

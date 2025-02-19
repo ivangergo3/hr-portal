@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { ClientsTable } from "@/components/clients/ClientsTable";
-import { AddClientModal } from "@/components/clients/AddClientModal";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import type { Client } from "@/types/database.types";
-import { LuPlus } from "react-icons/lu";
+import React, { useState, useEffect } from 'react';
+import { ClientsTable } from '@/components/clients/ClientsTable';
+import { AddClientModal } from '@/components/clients/AddClientModal';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import type { Client } from '@/types/database.types';
+import { LuPlus } from 'react-icons/lu';
 
 type ClientsLayoutProps = {
   clients: Client[];
@@ -18,7 +18,7 @@ export function ClientsLayout({ clients }: ClientsLayoutProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const filteredClients = clients.filter(
-    (client) => client.archived === showArchived
+    (client) => client.archived === showArchived,
   );
 
   useEffect(() => {
@@ -49,13 +49,13 @@ export function ClientsLayout({ clients }: ClientsLayoutProps) {
               onClick={() => setShowArchived(!showArchived)}
               className={`text-sm font-medium ${
                 showArchived
-                  ? "text-slate-900"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? 'text-slate-900'
+                  : 'text-slate-500 hover:text-slate-700'
               }`}
             >
               {showArchived
-                ? "← Back to Active Clients"
-                : "Show Archived Clients"}
+                ? '← Back to Active Clients'
+                : 'Show Archived Clients'}
             </button>
           </div>
         </div>

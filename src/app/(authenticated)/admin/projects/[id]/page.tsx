@@ -1,9 +1,9 @@
-import AdminGuard from "@/components/auth/AdminGuard";
-import ProjectForm from "@/components/admin/ProjectForm";
-import { notFound } from "next/navigation";
-import { Project, Client } from "@/types/database.types";
-import DataErrorBoundary from "@/components/common/DataErrorBoundary";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import ProjectForm from '@/components/admin/ProjectForm';
+import { notFound } from 'next/navigation';
+import { Project, Client } from '@/types/database.types';
+import DataErrorBoundary from '@/components/common/DataErrorBoundary';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function EditProjectPage({
   params,
@@ -21,22 +21,22 @@ export default async function EditProjectPage({
   }
 
   const { data: dbUser } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", user.id)
+    .from('users')
+    .select('*')
+    .eq('id', user.id)
     .single();
 
   const { data: project } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", params.id)
+    .from('projects')
+    .select('*')
+    .eq('id', params.id)
     .single();
 
   const { data: clients } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("archived", false)
-    .order("name");
+    .from('clients')
+    .select('*')
+    .eq('archived', false)
+    .order('name');
 
   if (!project) {
     notFound();

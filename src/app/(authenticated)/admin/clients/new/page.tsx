@@ -1,6 +1,6 @@
-import AdminGuard from "@/components/auth/AdminGuard";
-import ClientForm from "@/components/admin/ClientForm";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import ClientForm from '@/components/admin/ClientForm';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function NewClientPage() {
   const supabase = await createClientServer();
@@ -9,9 +9,9 @@ export default async function NewClientPage() {
   } = await supabase.auth.getSession();
 
   const { data: user } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", session?.user.id)
+    .from('users')
+    .select('*')
+    .eq('id', session?.user.id)
     .single();
 
   return (

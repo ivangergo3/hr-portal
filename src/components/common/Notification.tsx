@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { LuX } from "react-icons/lu";
+import { useEffect } from 'react';
+import { LuX } from 'react-icons/lu';
 
 interface NotificationProps {
   message: string;
-  type: "success" | "error";
+  type: 'success' | 'error';
   onClose: () => void;
   duration?: number;
 }
@@ -27,9 +27,9 @@ export default function Notification({
   return (
     <div
       className={`fixed bottom-4 right-4 rounded-lg p-4 shadow-lg ${
-        type === "success"
-          ? "bg-green-50 text-green-800"
-          : "bg-red-50 text-red-800"
+        type === 'success'
+          ? 'bg-green-50 text-green-800'
+          : 'bg-red-50 text-red-800'
       }`}
     >
       <div className="flex items-center gap-2">

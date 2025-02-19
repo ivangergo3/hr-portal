@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { LuCheck, LuX } from "react-icons/lu";
-import { TimeOffStatus, TimeOffRequestWithUser } from "@/types/database.types";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { withRetry } from "@/utils/apiRetry";
-import { createClientServer } from "@/utils/supabase/server";
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { LuCheck, LuX } from 'react-icons/lu';
+import { TimeOffStatus, TimeOffRequestWithUser } from '@/types/database.types';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { withRetry } from '@/utils/apiRetry';
+import { createClientServer } from '@/utils/supabase/server';
 
 interface TimeOffApprovalsProps {
   initialRequests: TimeOffRequestWithUser[];
@@ -20,16 +20,16 @@ export default function TimeOffApprovals({
     useState<TimeOffRequestWithUser[]>(initialRequests);
   const [selectedRequest, setSelectedRequest] =
     useState<TimeOffRequestWithUser | null>(null);
-  const [action, setAction] = useState<"approve" | "reject" | null>(null);
+  const [action, setAction] = useState<'approve' | 'reject' | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<"all" | TimeOffStatus>(
-    "all"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimeOffStatus>(
+    'all',
   );
 
   const supabase = createClientServer();
@@ -40,7 +40,7 @@ export default function TimeOffApprovals({
 
   const handleAction = async (
     request: TimeOffRequestWithUser,
-    action: "approve" | "reject"
+    action: 'approve' | 'reject',
   ) => {
     try {
       setError(null);
@@ -51,36 +51,36 @@ export default function TimeOffApprovals({
           const { error: updateError } = await (
             await supabase
           )
-            .from("time_off_requests")
+            .from('time_off_requests')
             .update({
-              status: action === "approve" ? "approved" : "rejected",
+              status: action === 'approve' ? 'approved' : 'rejected',
               updated_at: new Date().toISOString(),
             })
-            .eq("id", request.id);
+            .eq('id', request.id);
           if (updateError) throw updateError;
           return true;
         },
-        { maxAttempts: 3, delayMs: 1000 }
+        { maxAttempts: 3, delayMs: 1000 },
       );
 
       setRequests((prev) =>
         prev.map((r) =>
           r.id === request.id
-            ? { ...r, status: action === "approve" ? "approved" : "rejected" }
-            : r
-        )
+            ? { ...r, status: action === 'approve' ? 'approved' : 'rejected' }
+            : r,
+        ),
       );
 
       setNotification({
         message: `Time off request ${action}d successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[TimeOffApprovals] Action error:", error);
+      console.error('[TimeOffApprovals] Action error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : `Failed to ${action} request. Please try again.`
+          : `Failed to ${action} request. Please try again.`,
       );
     } finally {
       setIsUpdating(false);
@@ -91,7 +91,7 @@ export default function TimeOffApprovals({
   };
 
   const filteredRequests =
-    statusFilter === "all"
+    statusFilter === 'all'
       ? requests
       : requests.filter((request) => request.status === statusFilter);
 
@@ -118,7 +118,7 @@ export default function TimeOffApprovals({
           <select
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(e.target.value as "all" | TimeOffStatus)
+              setStatusFilter(e.target.value as 'all' | TimeOffStatus)
             }
             className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900"
           >
@@ -182,8 +182,8 @@ export default function TimeOffApprovals({
                         request.type.slice(1)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                      {format(new Date(request.start_date), "MMM d")} -{" "}
-                      {format(new Date(request.end_date), "MMM d, yyyy")}
+                      {format(new Date(request.start_date), 'MMM d')} -{' '}
+                      {format(new Date(request.end_date), 'MMM d, yyyy')}
                     </td>
                     <td className="px-3 py-4 text-sm text-slate-500 max-w-md truncate">
                       {request.description}
@@ -191,13 +191,13 @@ export default function TimeOffApprovals({
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <span
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                          request.status === "submitted"
-                            ? "bg-yellow-50 text-yellow-700"
-                            : request.status === "approved"
-                            ? "bg-green-50 text-green-700"
-                            : request.status === "rejected"
-                            ? "bg-red-50 text-red-700"
-                            : "bg-slate-100 text-slate-700"
+                          request.status === 'submitted'
+                            ? 'bg-yellow-50 text-yellow-700'
+                            : request.status === 'approved'
+                              ? 'bg-green-50 text-green-700'
+                              : request.status === 'rejected'
+                                ? 'bg-red-50 text-red-700'
+                                : 'bg-slate-100 text-slate-700'
                         }`}
                       >
                         {request.status.charAt(0).toUpperCase() +
@@ -205,17 +205,17 @@ export default function TimeOffApprovals({
                       </span>
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      {request.status === "submitted" && (
+                      {request.status === 'submitted' && (
                         <div className="flex gap-2 justify-end">
                           <button
-                            onClick={() => handleAction(request, "approve")}
+                            onClick={() => handleAction(request, 'approve')}
                             className="text-green-600 hover:text-green-900"
                             disabled={isUpdating}
                           >
                             <LuCheck className="h-5 w-5" />
                           </button>
                           <button
-                            onClick={() => handleAction(request, "reject")}
+                            onClick={() => handleAction(request, 'reject')}
                             className="text-red-600 hover:text-red-900"
                             disabled={isUpdating}
                           >

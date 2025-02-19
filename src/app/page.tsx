@@ -1,6 +1,6 @@
-import LoginButton from "@/components/auth/LoginButton";
-import { redirect } from "next/navigation";
-import { createClientServer } from "@/utils/supabase/server";
+import LoginButton from '@/components/auth/LoginButton';
+import { redirect } from 'next/navigation';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function Home() {
   const supabase = await createClientServer();
@@ -10,7 +10,7 @@ export default async function Home() {
 
   // If user is logged in, redirect to dashboard
   if (session) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
 
   return (
