@@ -1,0 +1,122 @@
+HR Portal Setup Guide
+====================
+
+Prerequisites
+------------
+- Node.js 18+ installed
+- npm or yarn
+- Git
+- A Supabase account
+- A Google Cloud Platform account
+
+Project Setup
+------------
+1. Clone and install dependencies:
+   git clone <repository-url>
+   cd hr-portal
+   npm install
+
+2. Create environment files:
+   cp .env.example .env
+
+Supabase Setup
+-------------
+1. Create new project at https://supabase.com
+   - Note your project URL and anon key
+   - Go to Project Settings > API to find these
+
+2. Run database initialization scripts in SQL Editor:
+   Execute in this order:
+   1. db-scripts/init-db.sql
+   2. And then run them all, they are in the order
+
+3. Enable Google Auth:
+   - Go to Authentication > Providers
+   - Find Google and click Enable
+   - You'll need Google OAuth credentials (setup below)
+   - Add redirect URI: https://<your-project>.supabase.co/auth/v1/callback
+
+Google Cloud Setup
+----------------
+1. Create project at https://console.cloud.google.com
+   - Go to "Select a project" > "New Project"
+   - Name it and create
+
+2. Configure OAuth Consent Screen:
+   - Go to APIs & Services > OAuth consent screen
+   - Choose "External"
+   - Fill required fields:
+     * App name: "HR Portal"
+     * User support email
+     * Developer contact email
+   - Add scopes: email, profile
+   - Add test users if needed
+
+3. Create OAuth Credentials:
+   - Go to APIs & Services > Credentials
+   - Click "Create Credentials" > "OAuth client ID"
+   - Choose "Web application"
+   - Add authorized redirect URIs:
+     * http://localhost:3000/auth/callback
+     * https://<your-project>.supabase.co/auth/v1/callback
+   - Save Client ID and Client Secret
+
+Environment Configuration
+-----------------------
+Update .env with your credentials:
+
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
+GOOGLE_CLIENT_ID=<your-google-client-id>
+GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+
+Final Steps
+----------
+1. Add Google credentials to Supabase:
+   - Go back to Authentication > Providers > Google
+   - Add your Google Client ID and Client Secret
+   - Save
+
+2. Start development server:
+   npm run dev
+
+3. Test authentication:
+   - Open http://localhost:3000
+   - Click "Sign in with Google"
+   - Should redirect to dashboard after login
+
+Troubleshooting
+--------------
+Common Issues:
+
+1. Authentication Fails
+   - Verify redirect URIs match exactly
+   - Check Google credentials in Supabase
+   - Ensure environment variables are set
+
+2. Database Issues
+   - Run fix-users.sql to reset permissions
+   - Check RLS policies are in place
+
+3. Development Environment
+   - Clear browser cookies/cache
+   - Restart development server
+   - Check console for errors
+
+Moving to Production
+------------------
+1. Update Google OAuth:
+   - Add production redirect URI
+   - Update environment variables
+
+2. Update Supabase:
+   - Create new project if needed
+   - Run all database scripts
+   - Update environment variables
+
+Security Notes
+-------------
+- Keep .env file secure and never commit to git
+- Regularly rotate Supabase and Google credentials
+- Monitor OAuth consent screen settings
+- Review RLS policies when adding features 
