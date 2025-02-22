@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from '@/utils/supabase/client';
 
 export default function LoginButton() {
   const supabase = createClient();
 
   const handleSignIn = async () => {
     await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider: 'google',
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },

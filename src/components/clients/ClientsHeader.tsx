@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { LuPlus } from "react-icons/lu";
-import { AddClientModal } from "./AddClientModal";
+import { useState } from 'react';
+import { LuPlus } from 'react-icons/lu';
+import { AddClientModal } from './AddClientModal';
 
 export function ClientsHeader({
   showArchived,
@@ -39,8 +39,8 @@ export function ClientsHeader({
             className="text-sm font-medium text-slate-500 hover:text-slate-700"
           >
             {showArchived
-              ? "← Back to Active Clients"
-              : "Show Archived Clients"}
+              ? '← Back to Active Clients'
+              : 'Show Archived Clients'}
           </button>
         </div>
       </div>

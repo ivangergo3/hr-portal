@@ -1,6 +1,6 @@
-import { redirect, notFound } from "next/navigation";
-import { TimesheetForm } from "@/components/timesheets/TimesheetForm";
-import { createClientServer } from "@/utils/supabase/server";
+import { redirect, notFound } from 'next/navigation';
+import { TimesheetForm } from '@/components/timesheets/TimesheetForm';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimesheetPage({
   params,
@@ -14,24 +14,24 @@ export default async function TimesheetPage({
       data: { session },
     } = await supabase.auth.getSession();
     if (!session) {
-      redirect("/error?code=auth");
+      redirect('/error?code=auth');
     }
 
     // Get user data for permission check
     const { data: userData } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", session.user.id)
+      .from('users')
+      .select('role')
+      .eq('id', session.user.id)
       .single();
 
     const { data: timesheet, error: timesheetError } = await supabase
-      .from("timesheet_weeks")
-      .select("*, user:users(*)")
-      .eq("id", params.id)
+      .from('timesheet_weeks')
+      .select('*, user:users(*)')
+      .eq('id', params.id)
       .single();
 
     if (timesheetError) {
-      redirect("/error?code=critical");
+      redirect('/error?code=critical');
     }
 
     if (!timesheet) {
@@ -39,26 +39,26 @@ export default async function TimesheetPage({
     }
 
     // Check if user has access to this timesheet
-    if (timesheet.user_id !== session.user.id && userData?.role !== "admin") {
-      redirect("/error?code=permission");
+    if (timesheet.user_id !== session.user.id && userData?.role !== 'admin') {
+      redirect('/error?code=permission');
     }
 
     // Get projects for the form
     const { data: projects, error: projectsError } = await supabase
-      .from("projects")
-      .select("*")
-      .eq("is_active", true)
-      .order("name");
+      .from('projects')
+      .select('*')
+      .eq('is_active', true)
+      .order('name');
 
     if (projectsError) {
-      redirect("/error?code=critical");
+      redirect('/error?code=critical');
     }
 
     // After getting session
     const { data: dbUser } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", session.user.id)
+      .from('users')
+      .select('*')
+      .eq('id', session.user.id)
       .single();
 
     return (
@@ -73,15 +73,15 @@ export default async function TimesheetPage({
               weekStart={new Date(timesheet.week_start_date)}
               projects={projects || []}
               initialTimesheets={[timesheet]}
-              weekStatus={timesheet.status || "draft"}
-              onCancel={() => redirect("/timesheets")}
+              weekStatus={timesheet.status || 'draft'}
+              onCancel={() => redirect('/timesheets')}
             />
           </div>
         </div>
       </div>
     );
   } catch (error) {
-    console.error("[Timesheet] Critical error:", error);
-    redirect("/error?code=critical");
+    console.error('[Timesheet] Critical error:', error);
+    redirect('/error?code=critical');
   }
 }

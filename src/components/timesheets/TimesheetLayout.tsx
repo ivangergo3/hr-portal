@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { WeekSelector } from "@/components/timesheets/WeekSelector";
-import { TimesheetForm } from "@/components/timesheets/TimesheetForm";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import type { User, Project, Timesheet } from "@/types/database.types";
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { WeekSelector } from '@/components/timesheets/WeekSelector';
+import { TimesheetForm } from '@/components/timesheets/TimesheetForm';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import type { User, Project, Timesheet } from '@/types/database.types';
 
 type TimesheetLayoutProps = {
   user: User;

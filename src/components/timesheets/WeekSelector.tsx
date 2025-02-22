@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import { format, addWeeks, subWeeks } from "date-fns";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { useRouter } from "next/navigation";
+import React from 'react';
+import { format, addWeeks, subWeeks } from 'date-fns';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { useRouter } from 'next/navigation';
 
 type WeekSelectorProps = {
   weekStart: Date;
@@ -19,7 +19,7 @@ export function WeekSelector({
   const handleWeekChange = (newWeek: Date) => {
     onLoadingChange(true);
     const params = new URLSearchParams();
-    params.set("week", newWeek.toISOString());
+    params.set('week', newWeek.toISOString());
     router.push(`/timesheets?${params.toString()}`);
   };
 
@@ -32,7 +32,7 @@ export function WeekSelector({
         <LuChevronLeft className="w-5 h-5" />
       </button>
       <span className="text-sm font-medium text-slate-900">
-        Week of {format(weekStart, "MMMM d, yyyy")}
+        Week of {format(weekStart, 'MMMM d, yyyy')}
       </span>
       <button
         onClick={() => handleWeekChange(addWeeks(weekStart, 1))}

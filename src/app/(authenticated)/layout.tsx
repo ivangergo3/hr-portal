@@ -1,8 +1,8 @@
-import Header from "@/components/navigation/Header";
-import Sidebar from "@/components/navigation/Sidebar";
-import { redirect } from "next/navigation";
-import ErrorBoundary from "@/components/common/ErrorBoundary";
-import { createClientServer } from "@/utils/supabase/server";
+import Header from '@/components/navigation/Header';
+import Sidebar from '@/components/navigation/Sidebar';
+import { redirect } from 'next/navigation';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function AuthenticatedLayout({
   children,
@@ -18,38 +18,38 @@ export default async function AuthenticatedLayout({
     } = await supabase.auth.getUser();
 
     if (authError) {
-      console.error("[Auth Layout] Auth error:", authError.message);
-      redirect("/");
+      console.error('[Auth Layout] Auth error:', authError.message);
+      redirect('/');
     }
 
     if (!user) {
-      redirect("/");
+      redirect('/');
     }
 
     try {
       const { data: dbUser, error: dbError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", user.id)
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
         .single();
 
       let currentUser = dbUser;
 
       if (dbError) {
-        console.error("[Auth Layout] DB user fetch error:", dbError.message);
+        console.error('[Auth Layout] DB user fetch error:', dbError.message);
         throw dbError;
       }
 
       if (!dbUser) {
         // Create new user if doesn't exist
         const { data: newUser, error: createError } = await supabase
-          .from("users")
+          .from('users')
           .insert([
             {
               id: user.id,
               email: user.email,
-              role: "employee",
-              full_name: user.user_metadata?.full_name || "",
+              role: 'employee',
+              full_name: user.user_metadata?.full_name || '',
             },
           ])
           .select()
@@ -57,14 +57,14 @@ export default async function AuthenticatedLayout({
 
         if (createError) {
           console.error(
-            "[Auth Layout] User creation error:",
-            createError.message
+            '[Auth Layout] User creation error:',
+            createError.message,
           );
           throw createError;
         }
 
         if (!newUser) {
-          throw new Error("Failed to create user record");
+          throw new Error('Failed to create user record');
         }
 
         currentUser = newUser;
@@ -84,7 +84,7 @@ export default async function AuthenticatedLayout({
         </ErrorBoundary>
       );
     } catch (error) {
-      console.error("[Auth Layout] Database error:", error);
+      console.error('[Auth Layout] Database error:', error);
       return (
         <div className="flex h-screen items-center justify-center bg-slate-50">
           <div className="text-center">
@@ -100,7 +100,7 @@ export default async function AuthenticatedLayout({
       );
     }
   } catch (error) {
-    console.error("[Auth Layout] Critical error:", error);
-    redirect("/error?code=critical");
+    console.error('[Auth Layout] Critical error:', error);
+    redirect('/error?code=critical');
   }
 }

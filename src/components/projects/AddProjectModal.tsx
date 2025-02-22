@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { LuLoader } from "react-icons/lu";
-import Modal from "@/components/common/Modal";
-import type { Client } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from 'react';
+import { LuLoader } from 'react-icons/lu';
+import Modal from '@/components/common/Modal';
+import type { Client } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 
 interface AddProjectModalProps {
   isOpen: boolean;
@@ -17,8 +17,8 @@ export function AddProjectModal({
   onClose,
   onSuccess,
 }: AddProjectModalProps) {
-  const [name, setName] = useState("");
-  const [clientId, setClientId] = useState("");
+  const [name, setName] = useState('');
+  const [clientId, setClientId] = useState('');
   const [clients, setClients] = useState<Client[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,16 +30,16 @@ export function AddProjectModal({
       try {
         setIsLoading(true);
         const { data, error } = await supabase
-          .from("clients")
-          .select("*")
-          .eq("archived", false)
-          .order("name");
+          .from('clients')
+          .select('*')
+          .eq('archived', false)
+          .order('name');
 
         if (error) throw error;
         setClients(data || []);
       } catch (error) {
-        console.error("[AddProject] Clients fetch error:", error);
-        setError("Failed to load clients");
+        console.error('[AddProject] Clients fetch error:', error);
+        setError('Failed to load clients');
       } finally {
         setIsLoading(false);
       }
@@ -53,7 +53,7 @@ export function AddProjectModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !clientId) {
-      setError("Project name and client are required");
+      setError('Project name and client are required');
       return;
     }
 
@@ -62,7 +62,7 @@ export function AddProjectModal({
       setError(null);
 
       const { error: insertError } = await supabase
-        .from("projects")
+        .from('projects')
         .insert([{ name: name.trim(), client_id: clientId }]);
 
       if (insertError) throw insertError;
@@ -70,16 +70,16 @@ export function AddProjectModal({
       handleClose();
       onSuccess?.();
     } catch (error) {
-      console.error("[AddProject] Submit error:", error);
-      setError("Failed to add project. Please try again.");
+      console.error('[AddProject] Submit error:', error);
+      setError('Failed to add project. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    setName("");
-    setClientId("");
+    setName('');
+    setClientId('');
     setError(null);
     onClose();
   };
@@ -153,7 +153,7 @@ export function AddProjectModal({
             {isSubmitting ? (
               <LuLoader className="h-4 w-4 animate-spin" />
             ) : (
-              "Add Project"
+              'Add Project'
             )}
           </button>
         </div>

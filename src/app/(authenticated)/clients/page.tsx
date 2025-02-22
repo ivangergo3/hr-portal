@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { ClientsContent } from "@/components/clients/ClientsContent";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { createClientServer } from "@/utils/supabase/server";
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import { ClientsContent } from '@/components/clients/ClientsContent';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import { createClientServer } from '@/utils/supabase/server';
 
 // Server component for data fetching
 async function ClientsData({ showArchived }: { showArchived: boolean }) {
@@ -13,25 +13,25 @@ async function ClientsData({ showArchived }: { showArchived: boolean }) {
     data: { user },
     error: authError,
   } = await supabase.auth.getUser();
-  if (authError || !user) redirect("/");
+  if (authError || !user) redirect('/');
 
   // Check admin status
   const { data: currentUser } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", user.id)
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
     .single();
 
-  if (currentUser?.role !== "admin") {
-    redirect("/");
+  if (currentUser?.role !== 'admin') {
+    redirect('/');
   }
 
   // Fetch clients based on archive status
   const { data: clients } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("archived", showArchived)
-    .order("name");
+    .from('clients')
+    .select('*')
+    .eq('archived', showArchived)
+    .order('name');
 
   return <ClientsContent clients={clients || []} showArchived={showArchived} />;
 }
@@ -41,7 +41,7 @@ export default function ClientsPage({
 }: {
   searchParams: { archived?: string };
 }) {
-  const showArchived = searchParams.archived === "true";
+  const showArchived = searchParams.archived === 'true';
 
   return (
     <Suspense

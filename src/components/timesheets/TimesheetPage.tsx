@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   User,
@@ -6,14 +6,14 @@ import {
   Project,
   Client,
   TimesheetStatus,
-} from "@/types/database.types";
-import WeeklyTimesheet from "@/components/timesheets/WeeklyTimesheet";
-import WeekNavigation from "@/components/timesheets/WeekNavigation";
-import { format } from "date-fns";
-import { LuCalendar } from "react-icons/lu";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+} from '@/types/database.types';
+import WeeklyTimesheet from '@/components/timesheets/WeeklyTimesheet';
+import WeekNavigation from '@/components/timesheets/WeekNavigation';
+import { format } from 'date-fns';
+import { LuCalendar } from 'react-icons/lu';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
 
 interface TimesheetPageProps {
   user: User;
@@ -47,11 +47,11 @@ export default function TimesheetPage({
     try {
       router.push(`/timesheets?week=${newWeek.toISOString()}`);
     } catch (error) {
-      console.error("[TimesheetPage] Navigation error:", error);
+      console.error('[TimesheetPage] Navigation error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to change week. Please try again."
+          : 'Failed to change week. Please try again.',
       );
     }
   };
@@ -76,22 +76,22 @@ export default function TimesheetPage({
         <div className="flex items-center gap-4 text-slate-900">
           <LuCalendar className="h-5 w-5 text-slate-900" />
           <div className="text-sm text-slate-900">
-            Week of {format(weekStart, "MMMM d, yyyy")}
+            Week of {format(weekStart, 'MMMM d, yyyy')}
           </div>
           <div
             className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-slate-900 ${
-              weekStatus === "submitted"
-                ? "bg-green-50 text-green-700"
-                : weekStatus === "draft"
-                ? "bg-slate-100 text-slate-700"
-                : "bg-slate-50 text-slate-600"
+              weekStatus === 'submitted'
+                ? 'bg-green-50 text-green-700'
+                : weekStatus === 'draft'
+                  ? 'bg-slate-100 text-slate-700'
+                  : 'bg-slate-50 text-slate-600'
             }`}
           >
-            {weekStatus === "submitted"
-              ? "Submitted"
-              : weekStatus === "draft"
-              ? "Draft"
-              : "No Entries"}
+            {weekStatus === 'submitted'
+              ? 'Submitted'
+              : weekStatus === 'draft'
+                ? 'Draft'
+                : 'No Entries'}
           </div>
         </div>
 

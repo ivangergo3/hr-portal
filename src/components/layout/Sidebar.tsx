@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { User } from "@/types/database.types";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { User } from '@/types/database.types';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import {
   LuLayoutDashboard,
   LuClock,
@@ -12,8 +12,8 @@ import {
   LuBriefcase,
   LuBuilding,
   LuTriangleAlert,
-} from "react-icons/lu";
-import { createClient } from "@/utils/supabase/client";
+} from 'react-icons/lu';
+import { createClient } from '@/utils/supabase/client';
 
 interface SidebarProps {
   user: User;
@@ -32,21 +32,21 @@ export default function Sidebar({ user }: SidebarProps) {
       try {
         setError(null);
         const { data: userData, error: roleError } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", user.id)
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
           .single();
 
         if (roleError) {
-          console.error("[Sidebar] Role fetch error:", roleError.message);
-          setError("Unable to load navigation. Please refresh the page.");
+          console.error('[Sidebar] Role fetch error:', roleError.message);
+          setError('Unable to load navigation. Please refresh the page.');
           return;
         }
 
         setUserRole(userData?.role || null);
       } catch (error) {
-        console.error("[Sidebar] Data fetch error:", error);
-        setError("An unexpected error occurred. Please refresh the page.");
+        console.error('[Sidebar] Data fetch error:', error);
+        setError('An unexpected error occurred. Please refresh the page.');
       } finally {
         setIsLoading(false);
       }
@@ -80,35 +80,35 @@ export default function Sidebar({ user }: SidebarProps) {
 
   const navigation = [
     {
-      name: "Dashboard",
-      href: "/dashboard",
+      name: 'Dashboard',
+      href: '/dashboard',
       icon: LuLayoutDashboard,
     },
     {
-      name: "Timesheets",
-      href: "/timesheets",
+      name: 'Timesheets',
+      href: '/timesheets',
       icon: LuClock,
     },
     {
-      name: "Time Off",
-      href: "/time-off",
+      name: 'Time Off',
+      href: '/time-off',
       icon: LuCalendarDays,
     },
-    ...(userRole === "admin"
+    ...(userRole === 'admin'
       ? [
           {
-            name: "Users",
-            href: "/users",
+            name: 'Users',
+            href: '/users',
             icon: LuUsers,
           },
           {
-            name: "Projects",
-            href: "/admin/projects",
+            name: 'Projects',
+            href: '/admin/projects',
             icon: LuBriefcase,
           },
           {
-            name: "Clients",
-            href: "/admin/clients",
+            name: 'Clients',
+            href: '/admin/clients',
             icon: LuBuilding,
           },
         ]
@@ -127,13 +127,13 @@ export default function Sidebar({ user }: SidebarProps) {
                 href={item.href}
                 className={`group flex items-center rounded-md px-2 py-2 text-sm font-medium ${
                   isActive
-                    ? "bg-slate-200 text-slate-900"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    ? 'bg-slate-200 text-slate-900'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <item.icon
                   className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                    isActive ? "text-slate-500" : "text-slate-400"
+                    isActive ? 'text-slate-500' : 'text-slate-400'
                   }`}
                 />
                 {item.name}

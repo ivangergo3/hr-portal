@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { LuArchive, LuUndo } from "react-icons/lu";
-import type { Client } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import React from 'react';
+import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { LuArchive, LuUndo } from 'react-icons/lu';
+import type { Client } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 type ClientsTableProps = {
   clients: Client[];
   showArchived: boolean;
@@ -24,17 +24,17 @@ export function ClientsTable({
     try {
       onAction();
       const { error } = await supabase
-        .from("clients")
+        .from('clients')
         .update({
           archived: !client.archived,
           archived_at: !client.archived ? new Date().toISOString() : null,
         })
-        .eq("id", client.id);
+        .eq('id', client.id);
 
       if (error) throw error;
       router.refresh();
     } catch (error) {
-      console.error("[ClientsTable] Archive toggle error:", error);
+      console.error('[ClientsTable] Archive toggle error:', error);
     }
   };
 
@@ -67,13 +67,13 @@ export function ClientsTable({
                   {client.name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                  {format(new Date(client.created_at), "MMM d, yyyy")}
+                  {format(new Date(client.created_at), 'MMM d, yyyy')}
                 </td>
                 {showArchived && (
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                     {client.archived_at
-                      ? format(new Date(client.archived_at), "MMM d, yyyy")
-                      : "N/A"}
+                      ? format(new Date(client.archived_at), 'MMM d, yyyy')
+                      : 'N/A'}
                   </td>
                 )}
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-right">

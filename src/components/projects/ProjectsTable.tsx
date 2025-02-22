@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { LuArchive, LuUndo } from "react-icons/lu";
-import type { Project, Client } from "@/types/database.types";
-import { createClient } from "@/utils/supabase/client";
+import React from 'react';
+import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { LuArchive, LuUndo } from 'react-icons/lu';
+import type { Project, Client } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
 
 type ProjectsTableProps = {
   projects: Project[];
@@ -27,17 +27,17 @@ export function ProjectsTable({
     try {
       onAction();
       const { error } = await supabase
-        .from("projects")
+        .from('projects')
         .update({
           archived: !project.archived,
           archived_at: !project.archived ? new Date().toISOString() : null,
         })
-        .eq("id", project.id);
+        .eq('id', project.id);
 
       if (error) throw error;
       router.refresh();
     } catch (error) {
-      console.error("[ProjectsTable] Archive toggle error:", error);
+      console.error('[ProjectsTable] Archive toggle error:', error);
     }
   };
 
@@ -75,16 +75,16 @@ export function ProjectsTable({
                     {project.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                    {client?.name || "N/A"}
+                    {client?.name || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                    {format(new Date(project.created_at), "MMM d, yyyy")}
+                    {format(new Date(project.created_at), 'MMM d, yyyy')}
                   </td>
                   {showArchived && (
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {project.archived_at
-                        ? format(new Date(project.archived_at), "MMM d, yyyy")
-                        : "N/A"}
+                        ? format(new Date(project.archived_at), 'MMM d, yyyy')
+                        : 'N/A'}
                     </td>
                   )}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right">

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { startOfWeek } from "date-fns";
-import { LuChevronLeft, LuChevronRight, LuCalendar } from "react-icons/lu";
-import { useState, useEffect } from "react";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import { startOfWeek } from 'date-fns';
+import { LuChevronLeft, LuChevronRight, LuCalendar } from 'react-icons/lu';
+import { useState, useEffect } from 'react';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
 
 interface WeekNavigationProps {
   currentWeek: Date;

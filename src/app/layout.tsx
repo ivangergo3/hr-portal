@@ -1,13 +1,12 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { createClientServer } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { createClientServer } from '@/utils/supabase/server';
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "HR Portal",
-  description: "Internal HR management system",
+  title: 'HR Portal',
+  description: 'Internal HR management system',
 };
 
 export default async function RootLayout({

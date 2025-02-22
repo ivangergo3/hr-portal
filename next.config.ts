@@ -7,7 +7,7 @@ const nextConfig = {
   },
   // Add image domains we'll use
   images: {
-    domains: ["lh3.googleusercontent.com"], // For Google Auth profile pictures
+    domains: ['lh3.googleusercontent.com'], // For Google Auth profile pictures
   },
 };
 

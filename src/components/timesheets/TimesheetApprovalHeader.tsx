@@ -1,5 +1,5 @@
-import { format, endOfWeek, addWeeks, subWeeks } from "date-fns";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { format, endOfWeek, addWeeks, subWeeks } from 'date-fns';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 
 interface TimesheetApprovalHeaderProps {
   selectedWeek: Date;
@@ -31,10 +31,10 @@ export function TimesheetApprovalHeader({
                 <LuChevronLeft className="h-5 w-5" />
               </button>
               <span className="text-sm font-medium text-slate-900">
-                {format(selectedWeek, "MMM d")} -{" "}
+                {format(selectedWeek, 'MMM d')} -{' '}
                 {format(
                   endOfWeek(selectedWeek, { weekStartsOn: 1 }),
-                  "MMM d, yyyy"
+                  'MMM d, yyyy',
                 )}
               </span>
               <button

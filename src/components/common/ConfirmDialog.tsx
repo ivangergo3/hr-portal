@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { LuTriangleAlert, LuLoader } from "react-icons/lu";
+import { LuTriangleAlert, LuLoader } from 'react-icons/lu';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -49,7 +49,7 @@ export default function ConfirmDialog({
               {isLoading ? (
                 <LuLoader className="h-4 w-4 animate-spin" />
               ) : (
-                "Submit"
+                'Submit'
               )}
             </button>
             <button

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import type { User, Project, Timesheet } from "@/types/database.types";
-import type { PostgrestError } from "@supabase/supabase-js";
-import { LuLoader, LuSave, LuSend, LuX } from "react-icons/lu";
-import Notification from "@/components/common/Notification";
-import { createClient } from "@/utils/supabase/client";
+import React, { useState } from 'react';
+import type { User, Project, Timesheet } from '@/types/database.types';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { LuLoader, LuSave, LuSend, LuX } from 'react-icons/lu';
+import Notification from '@/components/common/Notification';
+import { createClient } from '@/utils/supabase/client';
 
 type TimesheetFormProps = {
   user: User;
@@ -18,13 +18,13 @@ type TimesheetFormProps = {
 };
 
 const DAYS = [
-  { short: "Mon", full: "monday" },
-  { short: "Tue", full: "tuesday" },
-  { short: "Wed", full: "wednesday" },
-  { short: "Thu", full: "thursday" },
-  { short: "Fri", full: "friday" },
-  { short: "Sat", full: "saturday" },
-  { short: "Sun", full: "sunday" },
+  { short: 'Mon', full: 'monday' },
+  { short: 'Tue', full: 'tuesday' },
+  { short: 'Wed', full: 'wednesday' },
+  { short: 'Thu', full: 'thursday' },
+  { short: 'Fri', full: 'friday' },
+  { short: 'Sat', full: 'saturday' },
+  { short: 'Sun', full: 'sunday' },
 ];
 
 type ProjectEntry = {
@@ -62,13 +62,13 @@ export function TimesheetForm({
 
     return Object.values(entries);
   });
-  const [selectedProject, setSelectedProject] = useState<string>("");
+  const [selectedProject, setSelectedProject] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
 
   const supabase = createClient();
@@ -94,7 +94,7 @@ export function TimesheetForm({
     const errors: Record<string, string> = {};
 
     if (projectEntries.length === 0) {
-      errors.projects = "At least one project must be selected";
+      errors.projects = 'At least one project must be selected';
     }
 
     const totalHours = DAYS.reduce((total, { full }) => {
@@ -102,7 +102,7 @@ export function TimesheetForm({
     }, 0);
 
     if (totalHours === 0) {
-      errors.hours = "Total hours must be greater than 0";
+      errors.hours = 'Total hours must be greater than 0';
     }
 
     setFieldErrors(errors);
@@ -111,12 +111,12 @@ export function TimesheetForm({
 
   const handleSubmit = async (
     e: React.FormEvent,
-    status: "draft" | "submitted"
+    status: 'draft' | 'submitted',
   ) => {
     e.preventDefault();
 
-    if (status === "submitted" && !validateForm()) {
-      setError("Please fix the validation errors before submitting");
+    if (status === 'submitted' && !validateForm()) {
+      setError('Please fix the validation errors before submitting');
       return;
     }
 
@@ -126,16 +126,16 @@ export function TimesheetForm({
 
       // Check for existing timesheet week
       const { data: existingWeek } = await supabase
-        .from("timesheet_weeks")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("week_start_date", weekStart.toISOString())
+        .from('timesheet_weeks')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('week_start_date', weekStart.toISOString())
         .single();
 
       // Update or create timesheet week
       const { data: weekData, error: weekError } = await supabase
-        .from("timesheet_weeks")
-        [existingWeek ? "update" : "insert"](
+        .from('timesheet_weeks')
+        [existingWeek ? 'update' : 'insert'](
           existingWeek
             ? {
                 user_id: user.id,
@@ -146,9 +146,9 @@ export function TimesheetForm({
                     total +
                     Object.values(entry.hours).reduce(
                       (sum, h) => sum + (h || 0),
-                      0
+                      0,
                     ),
-                  0
+                  0,
                 ),
               }
             : [
@@ -161,14 +161,14 @@ export function TimesheetForm({
                       total +
                       Object.values(entry.hours).reduce(
                         (sum, h) => sum + (h || 0),
-                        0
+                        0,
                       ),
-                    0
+                    0,
                   ),
                 },
-              ]
+              ],
         )
-        .eq(existingWeek ? "id" : "", existingWeek?.id || "")
+        .eq(existingWeek ? 'id' : '', existingWeek?.id || '')
         .select()
         .single();
 
@@ -177,9 +177,9 @@ export function TimesheetForm({
       // Delete existing timesheet entries if updating
       if (existingWeek) {
         await supabase
-          .from("timesheets")
+          .from('timesheets')
           .delete()
-          .eq("week_id", existingWeek.id);
+          .eq('week_id', existingWeek.id);
       }
 
       // Create new timesheet entries
@@ -199,37 +199,37 @@ export function TimesheetForm({
       }));
 
       const { error: timesheetError } = await supabase
-        .from("timesheets")
+        .from('timesheets')
         .insert(timesheetData);
 
       if (timesheetError) throw timesheetError;
 
       setNotification({
         message: `Timesheet ${
-          status === "submitted" ? "submitted" : "saved"
+          status === 'submitted' ? 'submitted' : 'saved'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
 
       onSave?.();
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("[TimesheetForm] Error:", error.message);
+        console.error('[TimesheetForm] Error:', error.message);
       } else if (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "code" in error &&
-        "message" in error
+        'code' in error &&
+        'message' in error
       ) {
         const dbError = error as PostgrestError;
-        console.error("[TimesheetForm] Database error:", {
+        console.error('[TimesheetForm] Database error:', {
           code: dbError.code,
           message: dbError.message,
         });
       } else {
-        console.error("[TimesheetForm] Unknown error:", error);
+        console.error('[TimesheetForm] Unknown error:', error);
       }
-      setError("An unexpected error occurred. Please try again.");
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -249,12 +249,12 @@ export function TimesheetForm({
         hours: DAYS.reduce((acc, { full }) => ({ ...acc, [full]: 0 }), {}),
       },
     ]);
-    setSelectedProject("");
+    setSelectedProject('');
   };
 
   const removeProjectRow = (projectId: string) => {
     setProjectEntries(
-      projectEntries.filter((entry) => entry.project_id !== projectId)
+      projectEntries.filter((entry) => entry.project_id !== projectId),
     );
   };
 
@@ -272,7 +272,7 @@ export function TimesheetForm({
             {projects
               .filter(
                 (p) =>
-                  !projectEntries.some((entry) => entry.project_id === p.id)
+                  !projectEntries.some((entry) => entry.project_id === p.id),
               )
               .map((project) => (
                 <option key={project.id} value={project.id}>
@@ -291,16 +291,16 @@ export function TimesheetForm({
           </button>
           <span
             className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-              weekStatus === "submitted"
-                ? "bg-yellow-50 text-yellow-700"
-                : weekStatus === "approved"
-                ? "bg-green-50 text-green-700"
-                : weekStatus === "rejected"
-                ? "bg-red-50 text-red-700"
-                : "bg-slate-100 text-slate-700"
+              weekStatus === 'submitted'
+                ? 'bg-yellow-50 text-yellow-700'
+                : weekStatus === 'approved'
+                  ? 'bg-green-50 text-green-700'
+                  : weekStatus === 'rejected'
+                    ? 'bg-red-50 text-red-700'
+                    : 'bg-slate-100 text-slate-700'
             }`}
           >
-            {weekStatus || "draft"}
+            {weekStatus || 'draft'}
           </span>
           <div className="flex-1" />
           {onCancel && (
@@ -315,7 +315,7 @@ export function TimesheetForm({
           )}
           <button
             type="button"
-            onClick={(e) => handleSubmit(e, "draft")}
+            onClick={(e) => handleSubmit(e, 'draft')}
             disabled={isSubmitting}
             className="inline-flex items-center gap-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-200"
           >
@@ -324,7 +324,7 @@ export function TimesheetForm({
           </button>
           <button
             type="submit"
-            onClick={(e) => handleSubmit(e, "submitted")}
+            onClick={(e) => handleSubmit(e, 'submitted')}
             disabled={isSubmitting}
             className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -363,7 +363,7 @@ export function TimesheetForm({
             <tbody className="divide-y divide-slate-200">
               {projectEntries.map((entry) => {
                 const project = projects.find(
-                  (p) => p.id === entry.project_id
+                  (p) => p.id === entry.project_id,
                 )!;
                 return (
                   <tr key={project.id} className="hover:bg-slate-50">
@@ -394,8 +394,8 @@ export function TimesheetForm({
                                         [full]: parseFloat(e.target.value),
                                       },
                                     }
-                                  : entry
-                              )
+                                  : entry,
+                              ),
                             )
                           }
                           className="w-16 text-center rounded-md border-slate-300 shadow-sm 

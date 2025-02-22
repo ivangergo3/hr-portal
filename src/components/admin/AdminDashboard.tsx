@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import {
   LuUsers,
   LuBriefcase,
@@ -9,8 +9,8 @@ import {
   LuClipboardCheck,
   LuCalendarClock,
   LuSearch,
-} from "react-icons/lu";
-import Link from "next/link";
+} from 'react-icons/lu';
+import Link from 'next/link';
 import {
   PieChart,
   Pie,
@@ -21,9 +21,9 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-} from "recharts";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import { DateRangePicker } from "@/components/ui/DateRangePicker";
+} from 'recharts';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import { DateRangePicker } from '@/components/ui/DateRangePicker';
 
 export interface DashboardMetrics {
   total_hours: number;
@@ -73,18 +73,18 @@ interface ChartData {
 const CHART_COLORS = {
   // Base colors with good spacing in HSL color space
   colors: [
-    "#2563eb", // Blue
-    "#dc2626", // Red
-    "#16a34a", // Green
-    "#d97706", // Orange
-    "#7c3aed", // Purple
-    "#db2777", // Pink
-    "#059669", // Emerald
-    "#9333ea", // Violet
-    "#ca8a04", // Yellow
-    "#0891b2", // Cyan
-    "#be123c", // Rose
-    "#1d4ed8", // Indigo
+    '#2563eb', // Blue
+    '#dc2626', // Red
+    '#16a34a', // Green
+    '#d97706', // Orange
+    '#7c3aed', // Purple
+    '#db2777', // Pink
+    '#059669', // Emerald
+    '#9333ea', // Violet
+    '#ca8a04', // Yellow
+    '#0891b2', // Cyan
+    '#be123c', // Rose
+    '#1d4ed8', // Indigo
   ],
 };
 
@@ -98,7 +98,7 @@ export default function AdminDashboard({
   dateRange,
   onDateRangeChange,
 }: AdminDashboardProps) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -140,41 +140,41 @@ export default function AdminDashboard({
       client: entry.project.client.name,
       hours: entry.total_hours,
       week: entry.week_start_date
-        ? format(new Date(entry.week_start_date), "MMM d, yyyy")
-        : "N/A",
+        ? format(new Date(entry.week_start_date), 'MMM d, yyyy')
+        : 'N/A',
     }))
     .filter((row) =>
       Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      )
+        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
     );
 
   const stats = [
     {
-      name: "Total Hours",
-      value: metrics?.total_hours?.toFixed(1) || "0",
+      name: 'Total Hours',
+      value: metrics?.total_hours?.toFixed(1) || '0',
       icon: LuClock,
     },
     {
-      name: "Active Projects",
-      value: metrics?.active_projects?.toString() || "0",
+      name: 'Active Projects',
+      value: metrics?.active_projects?.toString() || '0',
       icon: LuBriefcase,
     },
     {
-      name: "Pending Timesheets",
-      value: metrics?.pending_timesheets?.toString() || "0",
+      name: 'Pending Timesheets',
+      value: metrics?.pending_timesheets?.toString() || '0',
       icon: LuClipboardCheck,
-      href: "/admin/timesheets",
+      href: '/admin/timesheets',
     },
     {
-      name: "Pending Time-offs",
-      value: metrics?.pending_timeoffs?.toString() || "0",
+      name: 'Pending Time-offs',
+      value: metrics?.pending_timeoffs?.toString() || '0',
       icon: LuCalendarClock,
-      href: "/admin/time-off",
+      href: '/admin/time-off',
     },
     {
-      name: "Active Employees",
-      value: metrics?.active_employees?.toString() || "0",
+      name: 'Active Employees',
+      value: metrics?.active_employees?.toString() || '0',
       icon: LuUsers,
     },
   ];
@@ -279,10 +279,10 @@ export default function AdminDashboard({
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(255, 255, 255, 0.95)",
-                      borderRadius: "6px",
-                      padding: "8px",
-                      border: "1px solid #e2e8f0",
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '6px',
+                      padding: '8px',
+                      border: '1px solid #e2e8f0',
                     }}
                   />
                   <Bar dataKey="hours" radius={[4, 4, 0, 0]}>
@@ -325,10 +325,10 @@ export default function AdminDashboard({
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(255, 255, 255, 0.95)",
-                      borderRadius: "6px",
-                      padding: "8px",
-                      border: "1px solid #e2e8f0",
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '6px',
+                      padding: '8px',
+                      border: '1px solid #e2e8f0',
                     }}
                   />
                 </PieChart>

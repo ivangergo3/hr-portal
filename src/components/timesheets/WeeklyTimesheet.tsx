@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
 import {
   Project,
   Client,
   Timesheet,
   TimesheetStatus,
-} from "@/types/database.types";
-import { useState, useEffect } from "react";
-import { addDays, format, startOfWeek } from "date-fns";
-import { LuSave, LuSend, LuTrash } from "react-icons/lu";
-import Notification from "@/components/common/Notification";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import { cn } from "@/lib/utils";
-import { createClient } from "@/utils/supabase/client";
+} from '@/types/database.types';
+import { useState, useEffect } from 'react';
+import { addDays, format, startOfWeek } from 'date-fns';
+import { LuSave, LuSend, LuTrash } from 'react-icons/lu';
+import Notification from '@/components/common/Notification';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import { cn } from '@/lib/utils';
+import { createClient } from '@/utils/supabase/client';
 
 interface WeeklyTimesheetProps {
   userId: string;
@@ -84,15 +84,15 @@ export default function WeeklyTimesheet({
           [addDays(weekStart, 5).toISOString()]: timesheet.saturday_hours || 0,
           [addDays(weekStart, 6).toISOString()]: timesheet.sunday_hours || 0,
         },
-      }))
+      })),
     );
   }, [initialTimesheets, weekStart]);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const supabase = createClient();
 
@@ -100,15 +100,15 @@ export default function WeeklyTimesheet({
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   // Check if timesheet is editable
-  const isEditable = weekStatus === "draft" || weekStatus === "rejected";
+  const isEditable = weekStatus === 'draft' || weekStatus === 'rejected';
 
   // Disable submit button if already submitted or approved
-  const canSubmit = weekStatus === "draft" || weekStatus === "rejected";
+  const canSubmit = weekStatus === 'draft' || weekStatus === 'rejected';
 
   const handleHoursChange = (
     projectId: string,
     date: string,
-    hours: number
+    hours: number,
   ) => {
     if (!isEditable) return;
     setEntries((current) => {
@@ -120,7 +120,7 @@ export default function WeeklyTimesheet({
                 ...entry,
                 hours: { ...entry.hours, [date]: hours },
               }
-            : entry
+            : entry,
         );
       }
       return [...current, { project_id: projectId, hours: { [date]: hours } }];
@@ -128,7 +128,7 @@ export default function WeeklyTimesheet({
   };
 
   const addProjectRow = () => {
-    setEntries((current) => [...current, { project_id: "", hours: {} }]);
+    setEntries((current) => [...current, { project_id: '', hours: {} }]);
   };
 
   const removeRow = (indexToRemove: number) => {
@@ -143,14 +143,14 @@ export default function WeeklyTimesheet({
 
     const invalidEntry = entries.find((entry) => !entry.project_id);
     if (invalidEntry) {
-      return "Please select a project for all rows";
+      return 'Please select a project for all rows';
     }
 
     const hasHours = entries.some((entry) =>
-      Object.values(entry.hours).some((hours) => hours > 0)
+      Object.values(entry.hours).some((hours) => hours > 0),
     );
     if (!hasHours) {
-      return "Please enter hours for at least one day";
+      return 'Please enter hours for at least one day';
     }
 
     return null;
@@ -167,9 +167,9 @@ export default function WeeklyTimesheet({
   };
 
   // Update the save function to validate before saving
-  const saveTimesheets = async (status: "draft" | "submitted" = "draft") => {
+  const saveTimesheets = async (status: 'draft' | 'submitted' = 'draft') => {
     setIsSaving(true);
-    setError("");
+    setError('');
 
     try {
       const weekStartDate = startOfWeek(weekStart, {
@@ -177,7 +177,7 @@ export default function WeeklyTimesheet({
       }).toISOString();
 
       const { data: weekData, error: weekError } = await supabase
-        .from("timesheet_weeks")
+        .from('timesheet_weeks')
         .upsert(
           {
             user_id: userId,
@@ -185,26 +185,26 @@ export default function WeeklyTimesheet({
             status: status,
           },
           {
-            onConflict: "user_id,week_start_date",
+            onConflict: 'user_id,week_start_date',
             ignoreDuplicates: false,
-          }
+          },
         )
         .select()
         .single();
 
       if (weekError) {
-        console.error("Weekly timesheet error:", weekError);
-        throw new Error(weekError.message || "Failed to save weekly timesheet");
+        console.error('Weekly timesheet error:', weekError);
+        throw new Error(weekError.message || 'Failed to save weekly timesheet');
       }
 
       const { error: deleteError } = await supabase
-        .from("timesheets")
+        .from('timesheets')
         .delete()
-        .eq("week_id", weekData.id);
+        .eq('week_id', weekData.id);
 
       if (deleteError) {
         throw new Error(
-          deleteError.message || "Failed to clear existing entries"
+          deleteError.message || 'Failed to clear existing entries',
         );
       }
 
@@ -233,33 +233,33 @@ export default function WeeklyTimesheet({
       });
 
       const { error: timesheetError } = await supabase
-        .from("timesheets")
+        .from('timesheets')
         .insert(timesheetEntries);
 
       if (timesheetError) throw timesheetError;
 
       setNotification({
         message:
-          status === "submitted"
+          status === 'submitted'
             ? entries.length === 0
-              ? "Empty timesheet submitted successfully"
-              : "Timesheet submitted successfully"
-            : "Draft saved successfully",
-        type: "success",
+              ? 'Empty timesheet submitted successfully'
+              : 'Timesheet submitted successfully'
+            : 'Draft saved successfully',
+        type: 'success',
       });
 
       // Refresh the page to sync state
-      if (status === "submitted") {
+      if (status === 'submitted') {
         setTimeout(() => {
           window.location.reload();
         }, 1500);
       }
     } catch (error) {
-      console.error("10. Error saving timesheets:", error);
+      console.error('10. Error saving timesheets:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to save timesheets. Please try again."
+          : 'Failed to save timesheets. Please try again.',
       );
     } finally {
       setIsSaving(false);
@@ -276,11 +276,11 @@ export default function WeeklyTimesheet({
           <div className="flex">
             <div className="ml-3">
               <h3 className="text-sm font-medium text-slate-800">
-                {weekStatus === "submitted"
-                  ? "Timesheet is pending approval"
-                  : weekStatus === "approved"
-                  ? "Timesheet has been approved"
-                  : "Timesheet has been rejected"}
+                {weekStatus === 'submitted'
+                  ? 'Timesheet is pending approval'
+                  : weekStatus === 'approved'
+                    ? 'Timesheet has been approved'
+                    : 'Timesheet has been rejected'}
               </h3>
             </div>
           </div>
@@ -299,7 +299,7 @@ export default function WeeklyTimesheet({
                   key={day.toISOString()}
                   className="w-32 px-3 py-3.5 text-center text-sm font-semibold text-slate-900"
                 >
-                  {format(day, "EEE dd")}
+                  {format(day, 'EEE dd')}
                 </th>
               ))}
               <th className="w-28 py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-slate-900">
@@ -319,25 +319,25 @@ export default function WeeklyTimesheet({
                       const isProjectAlreadySelected = entries.some(
                         (existingEntry, i) =>
                           i !== index &&
-                          existingEntry.project_id === newProjectId
+                          existingEntry.project_id === newProjectId,
                       );
                       if (isProjectAlreadySelected) {
                         setError(
-                          "This project is already selected in another row"
+                          'This project is already selected in another row',
                         );
                         return;
                       }
-                      setError("");
+                      setError('');
                       setEntries((current) =>
                         current.map((c, i) =>
-                          i === index ? { ...c, project_id: newProjectId } : c
-                        )
+                          i === index ? { ...c, project_id: newProjectId } : c,
+                        ),
                       );
                     }}
                     className={cn(
-                      "block w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900",
-                      !isEditable && "bg-slate-50 text-slate-500",
-                      !entry.project_id && "text-slate-900"
+                      'block w-full rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500 text-slate-900',
+                      !isEditable && 'bg-slate-50 text-slate-500',
+                      !entry.project_id && 'text-slate-900',
                     )}
                   >
                     <option value="" className="text-slate-900">
@@ -347,7 +347,7 @@ export default function WeeklyTimesheet({
                       .filter(
                         (project) =>
                           project.id === entry.project_id ||
-                          !entries.some((e) => e.project_id === project.id)
+                          !entries.some((e) => e.project_id === project.id),
                       )
                       .map((project) => (
                         <option
@@ -367,18 +367,18 @@ export default function WeeklyTimesheet({
                   >
                     <input
                       type="number"
-                      value={entry.hours[day.toISOString()] || ""}
+                      value={entry.hours[day.toISOString()] || ''}
                       onChange={(e) =>
                         handleHoursChange(
                           entry.project_id,
                           day.toISOString(),
-                          parseFloat(e.target.value) || 0
+                          parseFloat(e.target.value) || 0,
                         )
                       }
                       disabled={!isEditable}
                       className={cn(
-                        "w-20 text-center rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500",
-                        !isEditable && "bg-slate-50 text-slate-500"
+                        'w-20 text-center rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500',
+                        !isEditable && 'bg-slate-50 text-slate-500',
                       )}
                       min="0"
                       max="24"
@@ -414,7 +414,7 @@ export default function WeeklyTimesheet({
                 const dailyTotal = entries.reduce(
                   (sum, entry) =>
                     sum + (Number(entry.hours[day.toISOString()]) || 0),
-                  0
+                  0,
                 );
                 return (
                   <td
@@ -435,9 +435,9 @@ export default function WeeklyTimesheet({
                         sum +
                         Object.values(entry.hours).reduce(
                           (a, b) => a + (Number(b) || 0),
-                          0
+                          0,
                         ),
-                      0
+                      0,
                     )
                     .toFixed(1)}
                 </span>
@@ -463,7 +463,7 @@ export default function WeeklyTimesheet({
             <>
               <button
                 type="button"
-                onClick={() => saveTimesheets("draft")}
+                onClick={() => saveTimesheets('draft')}
                 disabled={isSaving}
                 className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
               >
@@ -499,7 +499,7 @@ export default function WeeklyTimesheet({
         onClose={() => setShowConfirmSubmit(false)}
         onConfirm={() => {
           setShowConfirmSubmit(false);
-          saveTimesheets("submitted");
+          saveTimesheets('submitted');
         }}
         title="Submit Timesheet"
         message="Are you sure you want to submit this timesheet? You won't be able to make changes after submission."

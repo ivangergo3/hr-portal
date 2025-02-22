@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import TimesheetApprovalWrapper from "@/components/timesheets/TimesheetApprovalWrapper";
-import { createClientServer } from "@/utils/supabase/server";
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import TimesheetApprovalWrapper from '@/components/timesheets/TimesheetApprovalWrapper';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimesheetApprovalsPage() {
   const supabase = await createClientServer();
@@ -9,7 +9,7 @@ export default async function TimesheetApprovalsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
+  if (!user) redirect('/');
 
   return (
     <div>

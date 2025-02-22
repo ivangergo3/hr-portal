@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import {
   BarChart,
   Bar,
@@ -12,8 +12,8 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import { createClient } from "@/utils/supabase/client";
+} from 'recharts';
+import { createClient } from '@/utils/supabase/client';
 
 interface ProjectData {
   id: string;
@@ -33,13 +33,13 @@ interface TimeEntry {
 let colorIndex = 0;
 function getRandomColor() {
   const colors = [
-    "#4F46E5", // Indigo
-    "#7C3AED", // Purple
-    "#EC4899", // Pink
-    "#EF4444", // Red
-    "#F59E0B", // Amber
-    "#10B981", // Emerald
-    "#3B82F6", // Blue
+    '#4F46E5', // Indigo
+    '#7C3AED', // Purple
+    '#EC4899', // Pink
+    '#EF4444', // Red
+    '#F59E0B', // Amber
+    '#10B981', // Emerald
+    '#3B82F6', // Blue
   ];
 
   // Assign the current color and update the index
@@ -52,7 +52,7 @@ function getRandomColor() {
 export function DashboardContent() {
   const [projectData, setProjectData] = useState<ProjectData[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
 
@@ -65,19 +65,19 @@ export function DashboardContent() {
         const { data: projects } = await (
           await supabase
         )
-          .from("projects")
+          .from('projects')
           .select(
             `
             id,
             name,
             client:clients(name)
-          `
+          `,
           )
-          .eq("archived", false);
+          .eq('archived', false);
 
         // Fetch timesheet entries
         const { data: entries } = await (await supabase)
-          .from("timesheets")
+          .from('timesheets')
           .select(
             `
             total_hours,
@@ -85,7 +85,7 @@ export function DashboardContent() {
             project:projects(name),
             client:clients(name),
             user:users!timesheets_user_id_fkey(full_name)
-          `
+          `,
           );
 
         if (projects && entries) {
@@ -104,16 +104,16 @@ export function DashboardContent() {
 
           // Update time entries
           const timeEntryData = entries.map((entry) => ({
-            employee: entry.user?.full_name || "Unknown",
-            project: entry.project?.name || "Unknown",
-            client: entry.client?.name || "Unknown",
+            employee: entry.user?.full_name || 'Unknown',
+            project: entry.project?.name || 'Unknown',
+            client: entry.client?.name || 'Unknown',
             date: entry.created_at,
             hours: entry.total_hours || 0,
           }));
           setTimeEntries(timeEntryData);
         }
       } catch (error) {
-        console.error("[Dashboard] Data fetch error:", error);
+        console.error('[Dashboard] Data fetch error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -161,7 +161,7 @@ export function DashboardContent() {
                     {project.name}
                   </span>
                 </div>
-              )
+              ),
           )}
         </div>
       </div>
@@ -182,7 +182,7 @@ export function DashboardContent() {
                   (entry, index) =>
                     entry.hours > 0 && (
                       <Cell key={`cell-${index}`} fill={entry.color} />
-                    )
+                    ),
                 )}
               </Bar>
             </BarChart>
@@ -265,7 +265,7 @@ export function DashboardContent() {
                       .includes(filterText.toLowerCase()) ||
                     entry.client
                       .toLowerCase()
-                      .includes(filterText.toLowerCase())
+                      .includes(filterText.toLowerCase()),
                 )
                 .map((entry, index) => (
                   <tr key={index}>
@@ -279,7 +279,7 @@ export function DashboardContent() {
                       {entry.client}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                      {format(new Date(entry.date), "MMM d, yyyy")}
+                      {format(new Date(entry.date), 'MMM d, yyyy')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {entry.hours}

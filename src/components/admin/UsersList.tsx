@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { User, Role } from "@/types/database.types";
-import { useState, useEffect } from "react";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
-import { createClientServer } from "@/utils/supabase/server";
+import { User, Role } from '@/types/database.types';
+import { useState, useEffect } from 'react';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
+import { createClientServer } from '@/utils/supabase/server';
 
 interface UsersListProps {
   initialUsers: User[];
@@ -45,25 +45,25 @@ export default function UsersList({
       setError(null);
 
       if (userId !== currentUserId) {
-        throw new Error("You can only edit your own role");
+        throw new Error('You can only edit your own role');
       }
 
       const { error: updateError } = await (await supabase)
-        .from("users")
+        .from('users')
         .update({ role: newRole })
-        .eq("id", userId);
+        .eq('id', userId);
 
       if (updateError) throw updateError;
 
       setUsers((prev) =>
         prev.map((user) =>
-          user.id === userId ? { ...user, role: newRole } : user
-        )
+          user.id === userId ? { ...user, role: newRole } : user,
+        ),
       );
     } catch (error) {
-      console.error("[UsersList] Role update error:", error);
+      console.error('[UsersList] Role update error:', error);
       setError(
-        error instanceof Error ? error.message : "Failed to update role"
+        error instanceof Error ? error.message : 'Failed to update role',
       );
     } finally {
       setIsUpdating(false);

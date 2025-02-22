@@ -1,4 +1,4 @@
-import { User } from "@/types/database.types";
+import { User } from '@/types/database.types';
 
 interface DashboardPageProps {
   user: User;

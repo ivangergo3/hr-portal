@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import AdminGuard from "@/components/auth/AdminGuard";
-import { User, Client, ApiResponse } from "@/types/database.types";
-import Link from "next/link";
-import { LuPlus, LuArchive, LuArchiveRestore } from "react-icons/lu";
-import { useState, useEffect } from "react";
-import Notification from "@/components/common/Notification";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import { User, Client, ApiResponse } from '@/types/database.types';
+import Link from 'next/link';
+import { LuPlus, LuArchive, LuArchiveRestore } from 'react-icons/lu';
+import { useState, useEffect } from 'react';
+import Notification from '@/components/common/Notification';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
+import { createClientServer } from '@/utils/supabase/server';
 
 interface ClientsListProps {
   user: User;
@@ -26,7 +26,7 @@ export default function ClientsList({
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,12 +59,12 @@ export default function ClientsList({
       const { error: updateError } = (await (
         await supabase
       )
-        .from("clients")
+        .from('clients')
         .update({
           archived: !client.archived,
           archived_at: !client.archived ? new Date().toISOString() : null,
         })
-        .eq("id", client.id)) as ClientUpdateResponse;
+        .eq('id', client.id)) as ClientUpdateResponse;
 
       if (updateError) {
         throw updateError;
@@ -79,22 +79,22 @@ export default function ClientsList({
                 archived: !c.archived,
                 archived_at: !c.archived ? new Date().toISOString() : null,
               }
-            : c
-        )
+            : c,
+        ),
       );
 
       setNotification({
         message: `Client ${
-          client.archived ? "unarchived" : "archived"
+          client.archived ? 'unarchived' : 'archived'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[ClientsList] Toggle archive error:", error);
+      console.error('[ClientsList] Toggle archive error:', error);
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to update client status. Please try again."
+          : 'Failed to update client status. Please try again.',
       );
     } finally {
       setIsUpdating(false);
@@ -102,7 +102,7 @@ export default function ClientsList({
   };
 
   const filteredClients = clients.filter(
-    (client) => client.archived === showArchived
+    (client) => client.archived === showArchived,
   );
 
   return (
@@ -161,14 +161,14 @@ export default function ClientsList({
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-900">
                         <span
                           className={
-                            client.archived ? "line-through text-slate-500" : ""
+                            client.archived ? 'line-through text-slate-500' : ''
                           }
                         >
                           {client.name}
                         </span>
                         {client.archived && client.archived_at && (
                           <span className="ml-2 text-xs text-slate-500">
-                            (Archived{" "}
+                            (Archived{' '}
                             {new Date(client.archived_at).toLocaleDateString()})
                           </span>
                         )}
@@ -180,7 +180,7 @@ export default function ClientsList({
                             disabled={isUpdating}
                             className="text-slate-600 hover:text-slate-900 disabled:opacity-50"
                           >
-                            {client.archived ? "Unarchive" : "Archive"}
+                            {client.archived ? 'Unarchive' : 'Archive'}
                           </button>
                           <Link
                             href={`/admin/clients/${client.id}`}

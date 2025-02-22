@@ -1,8 +1,8 @@
-import AdminGuard from "@/components/auth/AdminGuard";
-import ProjectForm from "@/components/admin/ProjectForm";
-import { Client } from "@/types/database.types";
-import DataErrorBoundary from "@/components/common/DataErrorBoundary";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import ProjectForm from '@/components/admin/ProjectForm';
+import { Client } from '@/types/database.types';
+import DataErrorBoundary from '@/components/common/DataErrorBoundary';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function NewProjectPage() {
   const supabase = await createClientServer();
@@ -16,16 +16,16 @@ export default async function NewProjectPage() {
   }
 
   const { data: dbUser } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", user.id)
+    .from('users')
+    .select('*')
+    .eq('id', user.id)
     .single();
 
   const { data: clients } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("archived", false)
-    .order("name");
+    .from('clients')
+    .select('*')
+    .eq('archived', false)
+    .order('name');
 
   return (
     <AdminGuard user={dbUser}>

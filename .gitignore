@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# VS Code
+.vscode
+
 # env files
 secret.json
 .env

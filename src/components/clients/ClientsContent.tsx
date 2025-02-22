@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import type { Client } from "@/types/database.types";
-import { format } from "date-fns";
-import { LuArchive } from "react-icons/lu";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
-import Notification from "@/components/common/Notification";
-import { AddClientModal } from "./AddClientModal";
-import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import type { Client } from '@/types/database.types';
+import { format } from 'date-fns';
+import { LuArchive } from 'react-icons/lu';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import Notification from '@/components/common/Notification';
+import { AddClientModal } from './AddClientModal';
+import { createClient } from '@/utils/supabase/client';
 
 export const ClientsContent = forwardRef<
   { refresh: () => void },
@@ -19,7 +19,7 @@ export const ClientsContent = forwardRef<
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
-    type: "success" | "error";
+    type: 'success' | 'error';
   } | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const supabase = createClient();
@@ -28,18 +28,18 @@ export const ClientsContent = forwardRef<
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from("clients")
-        .select("*")
-        .eq("archived", showArchived)
-        .order("name");
+        .from('clients')
+        .select('*')
+        .eq('archived', showArchived)
+        .order('name');
 
       if (error) throw error;
       setClients(data || []);
     } catch (error) {
-      console.error("[Clients] Fetch error:", error);
+      console.error('[Clients] Fetch error:', error);
       setNotification({
-        message: "Failed to load clients",
-        type: "error",
+        message: 'Failed to load clients',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -60,24 +60,24 @@ export const ClientsContent = forwardRef<
     try {
       setIsLoading(true);
       const { error } = await supabase
-        .from("clients")
+        .from('clients')
         .update({ archived: !showArchived })
-        .eq("id", selectedClient.id);
+        .eq('id', selectedClient.id);
 
       if (error) throw error;
 
       setClients(clients.filter((c) => c.id !== selectedClient.id));
       setNotification({
         message: `Client ${
-          showArchived ? "unarchived" : "archived"
+          showArchived ? 'unarchived' : 'archived'
         } successfully`,
-        type: "success",
+        type: 'success',
       });
     } catch (error) {
-      console.error("[Clients] Archive error:", error);
+      console.error('[Clients] Archive error:', error);
       setNotification({
-        message: "Failed to update client",
-        type: "error",
+        message: 'Failed to update client',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -131,7 +131,7 @@ export const ClientsContent = forwardRef<
                     {client.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                    {format(new Date(client.created_at), "MMM d, yyyy")}
+                    {format(new Date(client.created_at), 'MMM d, yyyy')}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div className="flex justify-end gap-2">
@@ -160,9 +160,9 @@ export const ClientsContent = forwardRef<
           setSelectedClient(null);
         }}
         onConfirm={handleArchive}
-        title={showArchived ? "Unarchive Client" : "Archive Client"}
+        title={showArchived ? 'Unarchive Client' : 'Archive Client'}
         message={`Are you sure you want to ${
-          showArchived ? "unarchive" : "archive"
+          showArchived ? 'unarchive' : 'archive'
         } ${selectedClient?.name}?`}
       />
 
@@ -183,4 +183,4 @@ export const ClientsContent = forwardRef<
   );
 });
 
-ClientsContent.displayName = "ClientsContent";
+ClientsContent.displayName = 'ClientsContent';

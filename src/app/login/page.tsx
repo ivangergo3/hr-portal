@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
-import LoginForm from "@/components/auth/LoginForm";
+import { redirect } from 'next/navigation';
+import LoginForm from '@/components/auth/LoginForm';
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from '@/utils/supabase/client';
 
 export default async function LoginPage() {
   const supabase = await createClient();
@@ -13,13 +13,13 @@ export default async function LoginPage() {
   } = await supabase.auth.getSession();
 
   if (error) {
-    console.error("[LoginPage] Session error:", error.message);
-    redirect("/error?code=auth");
+    console.error('[LoginPage] Session error:', error.message);
+    redirect('/error?code=auth');
   }
 
   // If logged in, redirect to dashboard
   if (session) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
 
   return (

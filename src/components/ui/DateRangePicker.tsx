@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { format } from "date-fns";
-import { LuCalendar } from "react-icons/lu";
+import React from 'react';
+import { format } from 'date-fns';
+import { LuCalendar } from 'react-icons/lu';
 
 type DateRangePickerProps = {
   from: Date;
@@ -16,7 +16,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
       <div className="relative">
         <input
           type="date"
-          value={format(from, "yyyy-MM-dd")}
+          value={format(from, 'yyyy-MM-dd')}
           onChange={(e) => onChange({ from: new Date(e.target.value), to })}
           className="pl-9 pr-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
         />
@@ -26,9 +26,9 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
       <div className="relative">
         <input
           type="date"
-          value={format(to, "yyyy-MM-dd")}
+          value={format(to, 'yyyy-MM-dd')}
           onChange={(e) => onChange({ from, to: new Date(e.target.value) })}
-          min={format(from, "yyyy-MM-dd")}
+          min={format(from, 'yyyy-MM-dd')}
           className="pl-9 pr-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
         />
         <LuCalendar className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />

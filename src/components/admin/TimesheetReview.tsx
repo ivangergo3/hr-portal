@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { TimesheetWeekWithRelations } from "@/types/database.types";
+import { TimesheetWeekWithRelations } from '@/types/database.types';
 
 interface TimesheetReviewProps {
   timesheet: TimesheetWeekWithRelations | null;
@@ -15,7 +15,7 @@ export default function TimesheetReview({
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <div className="text-center text-sm text-slate-600">
-          {isLoading ? "Loading..." : "No timesheet data available"}
+          {isLoading ? 'Loading...' : 'No timesheet data available'}
         </div>
       </div>
     );
@@ -25,7 +25,7 @@ export default function TimesheetReview({
     return timesheet.timesheets.reduce(
       (total, entry) =>
         total + ((entry[`${day}_hours` as keyof typeof entry] as number) || 0),
-      0
+      0,
     );
   };
 
@@ -129,19 +129,19 @@ export default function TimesheetReview({
                 Daily Total
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
-                {calculateDailyTotal("monday")}h
+                {calculateDailyTotal('monday')}h
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
-                {calculateDailyTotal("tuesday")}h
+                {calculateDailyTotal('tuesday')}h
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
-                {calculateDailyTotal("wednesday")}h
+                {calculateDailyTotal('wednesday')}h
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
-                {calculateDailyTotal("thursday")}h
+                {calculateDailyTotal('thursday')}h
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
-                {calculateDailyTotal("friday")}h
+                {calculateDailyTotal('friday')}h
               </td>
               <td className="px-3 py-4 text-center text-sm font-medium text-slate-900">
                 {timesheet.total_hours}h

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { TimeOffRequestWithUser, TimeOffStatus } from "@/types/database.types";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
-import EmptyState from "@/components/common/EmptyState";
+import { useState, useEffect } from 'react';
+import { TimeOffRequestWithUser, TimeOffStatus } from '@/types/database.types';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
+import EmptyState from '@/components/common/EmptyState';
 
 interface TimeOffApprovalsProps {
   requests: TimeOffRequestWithUser[];
 }
 
 export default function TimeOffApprovals({ requests }: TimeOffApprovalsProps) {
-  const [statusFilter, setStatusFilter] = useState<"all" | TimeOffStatus>(
-    "all"
+  const [statusFilter, setStatusFilter] = useState<'all' | TimeOffStatus>(
+    'all',
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -34,7 +34,7 @@ export default function TimeOffApprovals({ requests }: TimeOffApprovalsProps) {
   }
 
   const filteredRequests =
-    statusFilter === "all"
+    statusFilter === 'all'
       ? requests
       : requests.filter((request) => request.status === statusFilter);
 
@@ -44,7 +44,7 @@ export default function TimeOffApprovals({ requests }: TimeOffApprovalsProps) {
         <select
           value={statusFilter}
           onChange={(e) =>
-            setStatusFilter(e.target.value as "all" | TimeOffStatus)
+            setStatusFilter(e.target.value as 'all' | TimeOffStatus)
           }
           className="rounded-md border-slate-300 text-sm focus:border-slate-500 focus:ring-slate-500"
         >

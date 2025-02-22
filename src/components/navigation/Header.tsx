@@ -1,7 +1,7 @@
-import SignOutButton from "@/components/auth/SignOutButton";
-import Link from "next/link";
-import { LuUser } from "react-icons/lu";
-import { createClientServer } from "@/utils/supabase/server";
+import SignOutButton from '@/components/auth/SignOutButton';
+import Link from 'next/link';
+import { LuUser } from 'react-icons/lu';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function Header() {
   try {
@@ -13,7 +13,7 @@ export default async function Header() {
     } = await supabase.auth.getUser();
 
     if (authError) {
-      console.error("[Header] Auth error:", authError.message);
+      console.error('[Header] Auth error:', authError.message);
       return null; // Let the layout handle the redirect
     }
 
@@ -23,13 +23,13 @@ export default async function Header() {
 
     try {
       const { data: profile, error: profileError } = await supabase
-        .from("users")
-        .select("full_name, email, role")
-        .eq("id", user.id)
+        .from('users')
+        .select('full_name, email, role')
+        .eq('id', user.id)
         .single();
 
       if (profileError) {
-        console.error("[Header] Profile fetch error:", profileError.message);
+        console.error('[Header] Profile fetch error:', profileError.message);
         throw profileError;
       }
 
@@ -51,7 +51,7 @@ export default async function Header() {
         </header>
       );
     } catch (error) {
-      console.error("[Header] Data fetch error:", error);
+      console.error('[Header] Data fetch error:', error);
       return (
         <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-slate-50 px-6">
           <div />
@@ -65,7 +65,7 @@ export default async function Header() {
       );
     }
   } catch (error) {
-    console.error("[Header] Critical error:", error);
+    console.error('[Header] Critical error:', error);
     return null;
   }
 }

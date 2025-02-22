@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   User,
   DashboardMetrics,
   TimesheetWeek,
   TimeOffRequest,
-} from "@/types/database.types";
+} from '@/types/database.types';
 
 interface DashboardViewProps {
   user: User;
@@ -23,7 +23,7 @@ export default function DashboardView({
   const [error, setError] = useState<string | null>(null);
 
   if (!metrics || !timeOffRequests || !timesheets) {
-    setError("Unable to load dashboard data");
+    setError('Unable to load dashboard data');
     return (
       <div className="text-center py-12">
         <h2 className="text-lg font-semibold text-slate-900">

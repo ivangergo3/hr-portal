@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
-import { LuLoader, LuShieldAlert } from "react-icons/lu";
-import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from 'react';
+import { redirect } from 'next/navigation';
+import { LuLoader, LuShieldAlert } from 'react-icons/lu';
+import { createClient } from '@/utils/supabase/client';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -23,15 +23,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         } = await supabase.auth.getUser();
 
         if (authError) {
-          console.error("[AuthGuard] Auth error:", authError.message);
-          setError("Unable to verify authentication");
+          console.error('[AuthGuard] Auth error:', authError.message);
+          setError('Unable to verify authentication');
           return;
         }
 
         setIsAuthenticated(!!user);
       } catch (error) {
-        console.error("[AuthGuard] Check error:", error);
-        setError("An unexpected error occurred");
+        console.error('[AuthGuard] Check error:', error);
+        setError('An unexpected error occurred');
       }
     };
 
@@ -58,7 +58,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (!isAuthenticated) {
-    redirect("/");
+    redirect('/');
   }
 
   return <>{children}</>;

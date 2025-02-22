@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LuClock,
   LuCalendarDays,
@@ -11,33 +11,33 @@ import {
   LuUsers,
   LuClipboardCheck,
   LuCalendarClock,
-} from "react-icons/lu";
-import { User } from "@/types/database.types";
+} from 'react-icons/lu';
+import { User } from '@/types/database.types';
 
 const navigation = [
-  { name: "Timesheets", href: "/timesheets", icon: LuClock },
-  { name: "Time Off", href: "/time-off", icon: LuCalendarDays },
+  { name: 'Timesheets', href: '/timesheets', icon: LuClock },
+  { name: 'Time Off', href: '/time-off', icon: LuCalendarDays },
 ];
 
 const adminNavigation = [
   {
-    name: "Admin Dashboard",
-    href: "/admin/dashboard",
+    name: 'Admin Dashboard',
+    href: '/admin/dashboard',
     icon: LuLayoutDashboard,
   },
   {
-    name: "Timesheet Approvals",
-    href: "/admin/timesheets",
+    name: 'Timesheet Approvals',
+    href: '/admin/timesheets',
     icon: LuClipboardCheck,
   },
   {
-    name: "Time Off Approvals",
-    href: "/admin/time-off",
+    name: 'Time Off Approvals',
+    href: '/admin/time-off',
     icon: LuCalendarClock,
   },
-  { name: "Clients", href: "/admin/clients", icon: LuBuilding },
-  { name: "Projects", href: "/admin/projects", icon: LuFolderClosed },
-  { name: "Users", href: "/users", icon: LuUsers },
+  { name: 'Clients', href: '/admin/clients', icon: LuBuilding },
+  { name: 'Projects', href: '/admin/projects', icon: LuFolderClosed },
+  { name: 'Users', href: '/users', icon: LuUsers },
 ];
 
 export default function Sidebar({ user }: { user?: User }) {
@@ -60,8 +60,8 @@ export default function Sidebar({ user }: { user?: User }) {
                     href={item.href}
                     className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
                       isActive
-                        ? "bg-slate-200 text-slate-900"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                        ? 'bg-slate-200 text-slate-900'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                     }`}
                   >
                     <item.icon className="h-5 w-5" />
@@ -91,8 +91,8 @@ export default function Sidebar({ user }: { user?: User }) {
                   href={item.href}
                   className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
                     isActive
-                      ? "bg-slate-200 text-slate-900"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                      ? 'bg-slate-200 text-slate-900'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                   }`}
                 >
                   <item.icon className="h-5 w-5" />
@@ -103,7 +103,7 @@ export default function Sidebar({ user }: { user?: User }) {
           })}
         </ul>
 
-        {user.role === "admin" && (
+        {user.role === 'admin' && (
           <>
             <div className="mt-8 mb-2 px-3">
               <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -119,8 +119,8 @@ export default function Sidebar({ user }: { user?: User }) {
                       href={item.href}
                       className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
                         isActive
-                          ? "bg-slate-200 text-slate-900"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                          ? 'bg-slate-200 text-slate-900'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                       }`}
                     >
                       <item.icon className="h-5 w-5" />

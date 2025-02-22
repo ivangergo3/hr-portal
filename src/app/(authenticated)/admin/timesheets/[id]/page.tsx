@@ -1,8 +1,8 @@
-import { redirect } from "next/navigation";
-import TimesheetReview from "@/components/admin/TimesheetReview";
-import { format } from "date-fns";
-import Link from "next/link";
-import { createClientServer } from "@/utils/supabase/server";
+import { redirect } from 'next/navigation';
+import TimesheetReview from '@/components/admin/TimesheetReview';
+import { format } from 'date-fns';
+import Link from 'next/link';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimesheetPage({
   params,
@@ -21,18 +21,18 @@ export default async function TimesheetPage({
 
   // Check if user is admin
   const { data: userData } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", user.id)
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
     .single();
 
-  if (userData?.role !== "admin") {
-    redirect("/dashboard");
+  if (userData?.role !== 'admin') {
+    redirect('/dashboard');
   }
 
   // Get the timesheet week with all related data
   const { data: weekData } = await supabase
-    .from("timesheet_weeks")
+    .from('timesheet_weeks')
     .select(
       `
       *,
@@ -52,13 +52,13 @@ export default async function TimesheetPage({
           )
         )
       )
-    `
+    `,
     )
-    .eq("id", params.id)
+    .eq('id', params.id)
     .single();
 
   if (!weekData) {
-    redirect("/admin/timesheets");
+    redirect('/admin/timesheets');
   }
 
   return (
@@ -71,21 +71,21 @@ export default async function TimesheetPage({
             </h1>
             <span
               className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                weekData.status === "submitted"
-                  ? "bg-yellow-50 text-yellow-700"
-                  : weekData.status === "approved"
-                  ? "bg-green-50 text-green-700"
-                  : weekData.status === "rejected"
-                  ? "bg-red-50 text-red-700"
-                  : "bg-slate-100 text-slate-700"
+                weekData.status === 'submitted'
+                  ? 'bg-yellow-50 text-yellow-700'
+                  : weekData.status === 'approved'
+                    ? 'bg-green-50 text-green-700'
+                    : weekData.status === 'rejected'
+                      ? 'bg-red-50 text-red-700'
+                      : 'bg-slate-100 text-slate-700'
               }`}
             >
               {weekData.status}
             </span>
           </div>
           <p className="mt-2 text-sm text-slate-700">
-            {weekData.user.full_name}&apos;s timesheet for week of{" "}
-            {format(new Date(weekData.week_start_date), "MMMM d, yyyy")}
+            {weekData.user.full_name}&apos;s timesheet for week of{' '}
+            {format(new Date(weekData.week_start_date), 'MMMM d, yyyy')}
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0">

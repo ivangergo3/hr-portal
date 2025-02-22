@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import { useState, useEffect } from 'react';
+import LoadingSkeleton from '@/components/common/LoadingSkeleton';
 
 export default function TimesheetSummary(
   {
     /* ... */
-  }
+  },
 ) {
   const [isLoading, setIsLoading] = useState(true);
 

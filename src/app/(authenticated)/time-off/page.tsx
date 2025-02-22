@@ -1,9 +1,9 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { TimeOffHeader } from "@/components/time-off/TimeOffHeader";
-import { TimeOffContent } from "@/components/time-off/TimeOffContent";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { createClientServer } from "@/utils/supabase/server";
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import { TimeOffHeader } from '@/components/time-off/TimeOffHeader';
+import { TimeOffContent } from '@/components/time-off/TimeOffContent';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function TimeOffPage() {
   const supabase = await createClientServer();
@@ -11,7 +11,7 @@ export default async function TimeOffPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
+  if (!user) redirect('/');
 
   return (
     <div>

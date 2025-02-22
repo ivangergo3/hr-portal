@@ -1,7 +1,7 @@
-import AdminGuard from "@/components/auth/AdminGuard";
-import ClientForm from "@/components/admin/ClientForm";
-import { notFound } from "next/navigation";
-import { createClientServer } from "@/utils/supabase/server";
+import AdminGuard from '@/components/auth/AdminGuard';
+import ClientForm from '@/components/admin/ClientForm';
+import { notFound } from 'next/navigation';
+import { createClientServer } from '@/utils/supabase/server';
 
 export default async function EditClientPage({
   params,
@@ -14,15 +14,15 @@ export default async function EditClientPage({
   } = await supabase.auth.getSession();
 
   const { data: user } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", session?.user.id)
+    .from('users')
+    .select('*')
+    .eq('id', session?.user.id)
     .single();
 
   const { data: client } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("id", params.id)
+    .from('clients')
+    .select('*')
+    .eq('id', params.id)
     .single();
 
   if (!client) {

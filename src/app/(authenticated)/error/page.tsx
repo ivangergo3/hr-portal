@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { LuShieldAlert } from "react-icons/lu";
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { LuShieldAlert } from 'react-icons/lu';
 
 const errorMessages = {
   critical: {
-    title: "Critical Error",
+    title: 'Critical Error',
     message:
-      "A critical error occurred that prevents the application from functioning properly.",
+      'A critical error occurred that prevents the application from functioning properly.',
   },
   auth: {
-    title: "Authentication Error",
+    title: 'Authentication Error',
     message:
-      "There was a problem with your authentication. Please try signing in again.",
+      'There was a problem with your authentication. Please try signing in again.',
   },
   permission: {
-    title: "Permission Denied",
+    title: 'Permission Denied',
     message: "You don't have permission to access this resource.",
   },
   default: {
-    title: "Unexpected Error",
-    message: "An unexpected error occurred. Please try again later.",
+    title: 'Unexpected Error',
+    message: 'An unexpected error occurred. Please try again later.',
   },
 };
 
 export default function ErrorPage() {
   const searchParams = useSearchParams();
-  const code = searchParams.get("code") as keyof typeof errorMessages;
+  const code = searchParams.get('code') as keyof typeof errorMessages;
   const error = errorMessages[code] || errorMessages.default;
 
   return (

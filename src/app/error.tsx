@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { LuTriangleAlert } from "react-icons/lu";
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { LuTriangleAlert } from 'react-icons/lu';
 
 export default function GlobalError({
   error,
@@ -13,7 +13,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error("[Global Error]", error);
+    console.error('[Global Error]', error);
   }, [error]);
 
   return (

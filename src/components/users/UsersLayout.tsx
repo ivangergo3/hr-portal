@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { UsersTable } from "@/components/users/UsersTable";
-import { InviteUserModal } from "@/components/users/InviteUserModal";
-import type { User } from "@/types/database.types";
-import { LuUserPlus } from "react-icons/lu";
-import { useRouter } from "next/navigation";
-import { LoadingOverlay } from "@/components/common/LoadingOverlay";
+import React, { useState, useEffect } from 'react';
+import { UsersTable } from '@/components/users/UsersTable';
+import { InviteUserModal } from '@/components/users/InviteUserModal';
+import type { User } from '@/types/database.types';
+import { LuUserPlus } from 'react-icons/lu';
+import { useRouter } from 'next/navigation';
+import { LoadingOverlay } from '@/components/common/LoadingOverlay';
 
 type UsersLayoutProps = {
   users: User[];
