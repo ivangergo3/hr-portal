@@ -1,42 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { redirect } from 'next/navigation';
-import { LuLoader, LuShieldAlert } from 'react-icons/lu';
-import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { LuShieldAlert } from 'react-icons/lu';
+import { useAuth } from '@/contexts/AuthContext';
+import { PageTransitionLoader } from '../common/PageTransitionLoader';
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const supabase = createClient();
+  const { user, isLoading, error, isPageLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-
-        if (authError) {
-          console.error('[AuthGuard] Auth error:', authError.message);
-          setError('Unable to verify authentication');
-          return;
-        }
-
-        setIsAuthenticated(!!user);
-      } catch (error) {
-        console.error('[AuthGuard] Check error:', error);
-        setError('An unexpected error occurred');
-      }
-    };
-
-    checkAuth();
-  }, [supabase]);
+    if (!isLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isLoading, router]);
 
   if (error) {
     return (
@@ -49,16 +31,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     );
   }
 
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <LuLoader className="h-8 w-8 animate-spin text-slate-500" />
-      </div>
-    );
+  if (isLoading || isPageLoading) {
+    return <PageTransitionLoader manualLoading={true} />;
   }
 
-  if (!isAuthenticated) {
-    redirect('/');
+  if (!user) {
+    return <PageTransitionLoader manualLoading={true} />;
   }
 
   return <>{children}</>;

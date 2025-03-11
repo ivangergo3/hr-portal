@@ -1,20 +1,46 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { User } from '@/types/database.types';
+import { useEffect } from 'react';
+import { LuShieldAlert } from 'react-icons/lu';
+import { useAuth } from '@/contexts/AuthContext';
+import { PageTransitionLoader } from '../common/PageTransitionLoader';
 
-export default function AdminGuard({
-  children,
-  user,
-}: {
+interface AdminGuardProps {
   children: React.ReactNode;
-  user: User;
-}) {
+}
+
+export default function AdminGuard({ children }: AdminGuardProps) {
+  const { user, isAdmin, isLoading, error, isPageLoading } = useAuth();
   const router = useRouter();
 
-  if (user.role !== 'admin') {
-    router.push('/dashboard');
-    return null;
+  useEffect(() => {
+    if (!isLoading) {
+      if (!user) {
+        router.push('/login');
+      } else if (!isAdmin) {
+        router.push('/dashboard');
+      }
+    }
+  }, [user, isAdmin, isLoading, router]);
+
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <LuShieldAlert className="mx-auto h-12 w-12 text-red-500" />
+          <h3 className="mt-2 text-sm font-medium text-slate-900">{error}</h3>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading || isPageLoading) {
+    return <PageTransitionLoader manualLoading={true} />;
+  }
+
+  if (!user || !isAdmin) {
+    return <PageTransitionLoader manualLoading={true} />;
   }
 
   return <>{children}</>;

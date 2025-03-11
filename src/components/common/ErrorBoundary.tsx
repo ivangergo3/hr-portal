@@ -1,48 +1,63 @@
 'use client';
 
-import { Component, ReactNode } from 'react';
+import React from 'react';
 
-interface Props {
-  children: ReactNode;
-  fallback?: ReactNode;
+interface ErrorBoundaryProps {
+  fallback: React.ReactNode;
+  children: React.ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
+  error: Error | null;
 }
 
-export default class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+export default class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error): State {
-    return {
-      hasError: true,
-      error,
-    };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error) {
-    console.error('[ErrorBoundary] Caught error:', error);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    this.props.onError?.(error, errorInfo);
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
-      return (
-        this.props.fallback || (
-          <div className="p-4 rounded-md bg-red-50">
-            <h2 className="text-lg font-semibold text-red-800">
-              Something went wrong
-            </h2>
-            <p className="mt-2 text-sm text-red-600">
-              {this.state.error?.message || 'An unexpected error occurred'}
-            </p>
+      const isDev = process.env.NODE_ENV === 'development';
+
+      // In development mode, show detailed error information
+      if (isDev && React.isValidElement(this.props.fallback)) {
+        return (
+          <div>
+            {this.props.fallback}
+            <div className="mt-4 p-4 bg-red-50 rounded-md overflow-auto max-h-60">
+              <h3 className="text-sm font-medium text-red-800">
+                Error Details (Development Only)
+              </h3>
+              <p className="mt-2 text-sm text-red-700">
+                {this.state.error?.message}
+              </p>
+              {this.state.error?.stack && (
+                <pre className="mt-2 text-xs text-red-700 whitespace-pre-wrap">
+                  {this.state.error.stack}
+                </pre>
+              )}
+            </div>
           </div>
-        )
-      );
+        );
+      }
+
+      return this.props.fallback;
     }
 
     return this.props.children;

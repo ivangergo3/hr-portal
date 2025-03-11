@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { LuPlus } from 'react-icons/lu';
+import { LuArrowLeft, LuArrowRight } from 'react-icons/lu';
+import { Button } from '../ui/button';
 import { AddClientModal } from './AddClientModal';
 
 export function ClientsHeader({
@@ -13,45 +13,38 @@ export function ClientsHeader({
   onToggleArchived: () => void;
   onRefresh: () => void;
 }) {
-  const [showAddModal, setShowAddModal] = useState(false);
-
   return (
     <div className="bg-white shadow">
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-slate-900">Clients</h1>
+            <h1
+              className="text-2xl font-semibold text-slate-900"
+              data-testid="clients-header-title"
+            >
+              Clients
+            </h1>
             <p className="mt-1 text-sm text-slate-600">
               Manage your company&apos;s clients
             </p>
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
-          >
-            <LuPlus className="h-4 w-4" />
-            Add Client
-          </button>
-        </div>
-        <div className="mt-4">
-          <button
+          <Button
+            variant="outline"
+            data-testid={`clients-header-show-${
+              showArchived ? 'active' : 'archived'
+            }-button`}
             onClick={onToggleArchived}
-            className="text-sm font-medium text-slate-500 hover:text-slate-700"
           >
-            {showArchived
-              ? '← Back to Active Clients'
-              : 'Show Archived Clients'}
-          </button>
+            {showArchived ? (
+              <LuArrowLeft className="h-4 w-4" />
+            ) : (
+              <LuArrowRight className="h-4 w-4" />
+            )}
+            {showArchived ? 'Back to Active Clients' : 'Show Archived Clients'}
+          </Button>
+          <AddClientModal refresh={onRefresh} />
         </div>
       </div>
-      <AddClientModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSuccess={() => {
-          onRefresh();
-          setShowAddModal(false);
-        }}
-      />
     </div>
   );
 }

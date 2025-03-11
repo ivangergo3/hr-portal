@@ -54,7 +54,7 @@
   - [x] Change user roles with confirmation
   - [ ] TODO: Implement email notifications for invites
 - [x] Build client/project management interface
-- [ ] Create reporting views
+- [x] Create reporting views
 - [x] Admin approval pages
   - [x] Time off requests management
     - [x] List all requests with statusz
@@ -72,8 +72,8 @@
 - [x] Create admin dashboard
 - [x] Implement data filtering and search
 - [x] Add data visualization
-- [ ] TODO: Cookie error - it has to do soemthing with nextjs 15 ... async cookies ... etc
-- [ ] TODO: Server log error fixes - solved but its the same things, async API routes ... etc
+- [x] Cookie error - it has to do something with nextjs 15 ... async cookies ... etc
+- [x] Server log error fixes - solved but its the same things, async API routes ... etc
 - [x] Time sheets page dropdown make more readable
 - [x] Think about if a time sheet can be rejected after it was approved ??? -> can, if it was a mistake, sounds reasonable
 - [x] Error handling!!!
@@ -94,7 +94,7 @@
     - [x] Add date range validation for time-off
     - [x] Add hours validation for timesheets
     - [x] Add form validation improvements
-- [ ] SQL files into 1 single file
+- [x] SQL files into 1 single file
   - [x] Add a single migration file
   - [ ] TODO: Test the new migration file, if the database is working as expected
 - [O] Implement export functionality -> not implemented, we wont need this
@@ -104,7 +104,7 @@
 
 - [x] Fix admin dashboard
 - [x] Add time frame to admin dashboard
-- [ ] Performance optimization
+- [ ] TODO: Performance optimization
   - [x] server side rendering
   - [x] performance optimizations
   - [x] Add load masks
@@ -119,17 +119,66 @@
     - [x] Check admin dashboard
 - [x] draft timesheet page should reflet the real status of the timesheet
 
-## 7. Testing & deployment
+## 7. Testing & refactor
+
+- [x] Add proejct does not show notification
 
 - [x] Move to supabase/ssr -> might solve the cookie error -> NO IT DOES NOT SOLVE IT
-- [ ] Ensure that all the pages are working as expected
-- [ ] Write unit tests for each components
-- [ ] Write integration tests for each pages
-- [ ] Write end to end tests for each pages
-- [ ] Documentation
-- [ ] Production deployment
+- [x] Ensure that all the pages are working as expected
+- [-] Write unit tests for each components
+- [-] Write integration tests for each pages
+- [x] Modal for user invite, instead of the current one
 
-## 8. Enhancement and Polish - Phase 5
+- [x] Add shadcn/ui to the project
+- [x] Add a new component for the modal
+- [x] Add a new component for the error message
+- [x] Add a new component for the loading mask
+- [x] Add a new component for the date picker
+- [x] Add a new component for the time picker
+- [x] Add a new component for the date range picker
+- [x] Add a new component for the time frame picker
+- [x] Review and improve role management
+- [x] Add user archive option as well
+
+- [x] Header
+- [x] Sidebar
+
+- [x] Admin guard
+- [x] Auth guard
+- [x] Data Error boundary
+- [x] Error boundary
+- [x] Check page transitioning loader
+- [x] Email-password login
+- [x] Login button
+- [x] Login form
+- [x] Sign out button
+- [x] Check all the pages, some can be removed + use the same admin guard etc ...   
+- [x] Remove old confirm dialog + rename newconfim and newloading skeleton
+- [x] 3 error page, 404, error and error/page
+
+- [ ] Few hours of testing, to make sure everything is working properly - write a list of tests
+
+- [ ] Timesheets page, with the table, everything, this is a mess, need to sit down and understand it.
+
+## Next
+
+- [ ] Write end to end tests for each pages
+  - [x] Login - invalid login?
+  - [ ] Profile
+  - [x] Client management
+  - [ ] Project management
+  - [ ] Users
+  - [ ] Timesheets
+  - [ ] Time off
+  - [ ] Admin dashboard
+  - [ ] Time sheet approval
+  - [ ] Time off approval
+  - [ ] Error pages
+  - [ ] Navigation/Dashboard
+- [ ] Write visual regression tests for each pages
+- [ ] Add tests to CI pipeline ??? (is it expensive?)
+
+## 8. Enhancement and Polish & deploy - Phase 5
 
 - [ ] Review DB schema
 - [ ] Recreate DB schema in another database
@@ -141,8 +190,36 @@
     - [ ] Configure Supabase SMTP settings
   - [ ] Configure Supabase email templates
   - [ ] Update redirect URLs for production
-- [ ] Review and improve role management
+- [ ] Add new table for roles (as we will need more than employee and admin)
 - [ ] Add workspace to the registration / invitation (so we can take it to market)
+
+- [ ] Email login is not a test form now on, we need to make it secure ???
+
+- [ ] Check the number of requests to the db -> can be reduced ... typical nextjs issue. Maybe this is for later, not for now
+- [ ] Token should expire, need to be updated every hours or so ? 
+
+- [ ] Add user to users list after invite in pending role ????
+- [ ] Fix user invitation, SMTP server is not working
+- [ ] User can be invited, the popup should close and refresh, not the whole page, just the users list
+
+- [ ] All "timesheets" should be renames to "timesheet"
+- [ ] Constants should be stored in one sigle place and referenced form there -> submitted/rejected/approved anything
+- [ ] make classes on all buttons etc work the same way. So eg no button should have any class, all classes should be in the ui/button
+- [ ] New loading overlay should have some space below the header, like int timesheet page
+
+- [ ] Production deployment
+
+## Next phase
+
+- [ ] Add a documents part, where we can upload documents and employees can download them
+  - [ ] Add a documents page
+  - [ ] Employee can upload documents, and we can see them in the documents page
+  - [ ] Admin can upload a document for a specific user
+  - [ ] Employee can upload documents for Admin, so we can see it in the documents page
+  - [ ] 2 pages uploaded/downloadable documents for employees and admins
+
+- [ ] Documentation
+
 - [ ] Add cash flow page
   - [ ] Add a cash flow page
   - [ ] We can create an expenses part
@@ -154,18 +231,21 @@
   - [!] We can create an accountant role, so we don't have to send the things to them regularly, as they would just see it, but us as well
   - [!] We can start market it through our accountant, if they like it, they will recommend us
   - [!] Multiple currencies
+
 - [ ] Add "billing" to see when did we sent and invoice for how much and where
   - [ ] Add billing page, where you can filter for a time frame and project and see all teh past invoices and the uninvoiced worked hours
   - [ ] Add a button to create an invoice
   - [ ] The invoice will be sent manually, but we can hook up with szamlazz.hu, so we can create it automatically as well
   - [!] We can store the invoices with all the docuemnts, so we wnt need to upload it, as it was generated and got back right away.
-- [ ] Add a documents part, where we can upload documents and employees can download them
-  - [ ] Add a documents page
-  - [ ] Employee can upload documents, and we can see them in the documents page
-  - [ ] Admin can upload a document for a specific user
-  - [ ] Employee can upload documents for Admin, so we can see it in the documents page
-  - [ ] 2 pages uploaded/downloadable documents for employees and admins
+
 - [ ] Notifications center - alerts, etc.
+
+- [ ] roles -> superadmin, admin, accountant, manager, employee
+- [ ] side panael has accountant part as well 
+- [ ] new menu left side worked hours, right side holidays in the month. Bottom upload playslip. Header emloyee selector + month selector
+- [ ] Bank statements menu -> just a table with downloadable links, you can upload as well
+- [ ] Incoming invoives menu point -> 
+- [ ] Outgoing invoices menu point -> 
 
 ## 9. Testing and Deployment
 
@@ -181,12 +261,21 @@
   - [ ] Move all the pages to the pages folder
 - [ ] Revisit error handling
 
+- [ ] Make login no needed for the page, so it can be marketed as well
 - [ ] Add stripe integration for payments
 - [ ] Add a knowledge base
 - [ ] Add a calendar
 - [ ] Add a time tracker
 
 - [ ] Security audit
+
+## 10. Launch / Market
+
+- [ ] Create a landing page
+- [ ] Create a pricing page
+- [ ] Create a contact page
+- [ ] Create a FAQ page
+- [ ] Product hunt to launch the product
 
 ---
 

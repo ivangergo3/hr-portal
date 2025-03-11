@@ -48,3 +48,8 @@ secret.json
 .env
 .env.*
 !.env.example
+
+# playwright
+/playwright-report/
+playwright/.auth/
+/test-results/

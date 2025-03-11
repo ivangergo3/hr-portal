@@ -1,71 +1,92 @@
-import { Suspense } from 'react';
-import { createClientServer } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import { DashboardHeader } from '@/components/admin/DashboardHeader';
-import { DashboardContent } from '@/components/admin/DashboardContent';
-import { LoadingOverlay } from '@/components/common/LoadingOverlay';
+'use client';
 
-async function getInitialData() {
-  const supabase = await createClientServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect('/');
+import { createClient } from '@/utils/supabase/client';
+import { AdminDashboardWrapper } from '@/components/admin-dashboard/AdminDashboardWrapper';
+import { useEffect, useState } from 'react';
+import { LuLoader } from 'react-icons/lu';
 
-  const [
-    { count: totalUsers },
-    { count: totalProjects },
-    { count: pendingTimesheets },
-    { count: pendingTimeoffs },
-    { data: timeEntries },
-  ] = await Promise.all([
-    supabase.from('users').select('*', { count: 'exact', head: true }),
-    supabase.from('projects').select('*', { count: 'exact', head: true }),
-    supabase
-      .from('timesheet_weeks')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'submitted'),
-    supabase
-      .from('time_off_requests')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'submitted'),
-    supabase.from('timesheet_weeks').select('total_hours'),
-  ]);
-
-  const totalHours =
-    timeEntries?.reduce((sum, entry) => sum + (entry.total_hours || 0), 0) || 0;
-
-  return {
-    stats: {
-      totalUsers: totalUsers || 0,
-      totalProjects: totalProjects || 0,
-      pendingTimesheets: pendingTimesheets || 0,
-      pendingTimeoffs: pendingTimeoffs || 0,
-      totalHours,
-    },
-  };
+interface DashboardStats {
+  totalUsers: number;
+  totalProjects: number;
+  pendingTimesheets: number;
+  pendingTimeoffs: number;
+  totalHours: number;
 }
 
-export default async function AdminDashboardPage() {
-  const { stats } = await getInitialData();
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Server-rendered header with stats */}
-      <DashboardHeader stats={stats} />
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true);
+        const supabase = createClient();
 
-      {/* Client-rendered content with loading state */}
-      <Suspense
-        fallback={
-          <div className="px-4 sm:px-6 lg:px-8">
-            <div className="relative min-h-[200px]">
-              <LoadingOverlay />
-            </div>
-          </div>
-        }
-      >
-        <DashboardContent />
-      </Suspense>
-    </div>
-  );
+        const [
+          { count: totalUsers },
+          { count: totalProjects },
+          { count: pendingTimesheets },
+          { count: pendingTimeoffs },
+          { data: timeEntries },
+        ] = await Promise.all([
+          supabase.from('users').select('*', { count: 'exact', head: true }),
+          supabase.from('projects').select('*', { count: 'exact', head: true }),
+          supabase
+            .from('timesheet_weeks')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'submitted'),
+          supabase
+            .from('time_off_requests')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'submitted'),
+          supabase.from('timesheet_weeks').select('total_hours'),
+        ]);
+
+        const totalHours =
+          timeEntries?.reduce(
+            (sum, entry) => sum + (entry.total_hours || 0),
+            0,
+          ) || 0;
+
+        setStats({
+          totalUsers: totalUsers || 0,
+          totalProjects: totalProjects || 0,
+          pendingTimesheets: pendingTimesheets || 0,
+          pendingTimeoffs: pendingTimeoffs || 0,
+          totalHours,
+        });
+      } catch (err) {
+        console.error('[AdminDashboard] Error fetching data:', err);
+        setError('Failed to load dashboard data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LuLoader className="h-8 w-8 animate-spin text-slate-500" />
+      </div>
+    );
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <h3 className="mt-2 text-sm font-medium text-slate-900">
+            {error || 'Failed to load dashboard data'}
+          </h3>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminDashboardWrapper stats={stats} />;
 }

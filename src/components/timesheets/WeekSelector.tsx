@@ -3,7 +3,7 @@
 import React from 'react';
 import { format, addWeeks, subWeeks } from 'date-fns';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
-import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 
 type WeekSelectorProps = {
   weekStart: Date;
@@ -14,32 +14,59 @@ export function WeekSelector({
   weekStart,
   onLoadingChange,
 }: WeekSelectorProps) {
-  const router = useRouter();
+  // Create a form to submit for server-side navigation
+  const createWeekForm = (newWeek: Date) => {
+    const formId = `week-form-${newWeek.getTime()}`;
 
-  const handleWeekChange = (newWeek: Date) => {
+    return (
+      <form
+        id={formId}
+        action="/timesheets"
+        method="get"
+        style={{ display: 'none' }}
+      >
+        <input type="hidden" name="week" value={newWeek.toISOString()} />
+      </form>
+    );
+  };
+
+  const submitForm = (newWeek: Date) => {
     onLoadingChange(true);
-    const params = new URLSearchParams();
-    params.set('week', newWeek.toISOString());
-    router.push(`/timesheets?${params.toString()}`);
+    const form = document.getElementById(
+      `week-form-${newWeek.getTime()}`,
+    ) as HTMLFormElement;
+    if (form) {
+      form.submit();
+    }
   };
 
   return (
-    <div className="flex items-center gap-4 mt-4">
-      <button
-        onClick={() => handleWeekChange(subWeeks(weekStart, 1))}
+    <div className="flex items-center gap-4">
+      {createWeekForm(subWeeks(weekStart, 1))}
+      {createWeekForm(addWeeks(weekStart, 1))}
+
+      <Button
+        variant="ghost"
+        onClick={() => submitForm(subWeeks(weekStart, 1))}
         className="p-2 hover:bg-slate-100 rounded-full text-slate-900"
+        data-testid="timesheets-previous-week-button"
       >
         <LuChevronLeft className="w-5 h-5" />
-      </button>
-      <span className="text-sm font-medium text-slate-900">
+      </Button>
+      <span
+        data-testid="timesheets-week-selector-week"
+        className="text-sm font-medium text-slate-900"
+      >
         Week of {format(weekStart, 'MMMM d, yyyy')}
       </span>
-      <button
-        onClick={() => handleWeekChange(addWeeks(weekStart, 1))}
+      <Button
+        variant="ghost"
+        onClick={() => submitForm(addWeeks(weekStart, 1))}
         className="p-2 hover:bg-slate-100 rounded-full text-slate-900"
+        data-testid="timesheets-next-week-button"
       >
         <LuChevronRight className="w-5 h-5" />
-      </button>
+      </Button>
     </div>
   );
 }

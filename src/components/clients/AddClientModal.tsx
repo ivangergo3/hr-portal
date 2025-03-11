@@ -1,111 +1,135 @@
 'use client';
 
+import { LuPlus, LuLoader } from 'react-icons/lu';
 import { useState } from 'react';
-import { LuLoader } from 'react-icons/lu';
-import Modal from '@/components/common/Modal';
 import { createClient } from '@/utils/supabase/client';
 
-interface AddClientModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-}
+import { DialogDescription, DialogFooter, DialogTrigger } from '../ui/dialog';
+import { Button } from '../ui/button';
+import { DialogTitle } from '../ui/dialog';
+import { DialogHeader } from '../ui/dialog';
+import { DialogContent } from '../ui/dialog';
+import { Dialog } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Alert, AlertDescription } from '../ui/alert';
+import { toast } from 'sonner';
+import { validateClientName } from '@/utils/validation';
 
-export function AddClientModal({
-  isOpen,
-  onClose,
-  onSuccess,
-}: AddClientModalProps) {
+export function AddClientModal({ refresh }: { refresh: () => void }) {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Client name is required');
+      setError('Client name is required.');
       return;
     }
 
     try {
       setIsSubmitting(true);
       setError(null);
+      const error = validateClientName(name);
+      if (error) {
+        setError(error);
+        return;
+      }
 
       const { error: insertError } = await supabase
         .from('clients')
         .insert([{ name: name.trim() }]);
 
       if (insertError) throw insertError;
-
-      setName('');
-      handleClose();
-      onSuccess?.();
+      refresh();
+      setIsOpen(false);
+      toast.success('Client added successfully');
     } catch (error) {
       console.error('[AddClient] Submit error:', error);
-      setError('Failed to add client. Please try again.');
+      if (error?.message.includes('duplicate key')) {
+        setError('Client already exists.');
+      } else {
+        setError('Failed to add client. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleClose = () => {
-    setName('');
-    setError(null);
-    onClose();
-  };
-
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Add Client">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Client Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm text-slate-900"
-            placeholder="Enter client name"
-          />
-        </div>
-
-        {error && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">{error}</h3>
-              </div>
-            </div>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={() => setIsOpen(true)}
+          data-testid="add-client-modal-trigger"
+        >
+          <LuPlus className="h-4 w-4" /> Add New Client
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle data-testid="add-client-modal-title">
+            Add New Client
+          </DialogTitle>
+          <DialogDescription>
+            Add a new client to your company.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Client Name
+            </Label>
+            <Input
+              data-testid="add-client-name-input"
+              id="name"
+              placeholder="Enter client name"
+              className="col-span-3"
+              onChange={(e) => setName(e.currentTarget.value)}
+            />
           </div>
-        )}
-
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="rounded-md px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription data-testid="add-client-error">
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            variant="secondary"
+            data-testid="add-client-cancel-button"
+            onClick={() => setIsOpen(false)}
           >
             Cancel
-          </button>
-          <button
-            type="submit"
+          </Button>
+          <Button
+            type="button"
+            data-testid="add-client-submit-button"
+            onClick={handleSubmit}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
           >
             {isSubmitting ? (
-              <LuLoader className="h-4 w-4 animate-spin" />
+              <LuLoader
+                className="animate-spin"
+                data-testid="add-client-submit-button-loading"
+              />
             ) : (
               'Add Client'
             )}
-          </button>
-        </div>
-      </form>
-    </Modal>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

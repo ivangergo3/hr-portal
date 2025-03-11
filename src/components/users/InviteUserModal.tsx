@@ -1,36 +1,71 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LuLoader, LuX } from 'react-icons/lu';
-import type { Role } from '@/types/database.types';
+import { LuLoader, LuPlus } from 'react-icons/lu';
+import { Role } from '@/types/database.types';
 import { createClient } from '@/utils/supabase/client';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
-type InviteUserModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
-  const [formData, setFormData] = useState({
-    email: '',
-    role: 'employee' as Role,
-  });
+export function InviteUserModal({ refresh }: { refresh: () => void }) {
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const supabase = createClient();
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email && !role) {
+      setError('Email and role are required');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError('A valid email is required');
+      return;
+    }
+
+    if (!(role in Role)) {
+      setError('A valid role is required');
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
     try {
       const { error: inviteError } = await supabase.auth.signInWithOtp({
-        email: formData.email,
+        email: email,
         options: {
           data: {
-            role: formData.role,
+            role: role,
           },
         },
       });
@@ -40,14 +75,15 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
       // Create user record
       const { error: createError } = await supabase.from('users').insert([
         {
-          email: formData.email,
-          role: formData.role,
+          email: email,
+          role: role,
         },
       ]);
 
       if (createError) throw createError;
 
-      onClose();
+      setIsOpen(false);
+      refresh();
     } catch (error) {
       console.error('[InviteUser] Error:', error);
       setError('Failed to send invitation. Please try again.');
@@ -56,92 +92,97 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">Invite User</h2>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-500"
-          >
-            <LuX className="w-5 h-5" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-slate-900"
-            >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={() => setIsOpen(true)}
+          data-testid="invite-user-modal-trigger"
+        >
+          <LuPlus className="h-4 w-4" /> Invite New User
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle data-testid="invite-user-modal-title">
+            Invite New User
+          </DialogTitle>
+          <DialogDescription>
+            Invite a new user to your company.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
               Email
-            </label>
-            <input
-              type="email"
+            </Label>
+            <Input
+              data-testid="invite-user-email-input"
               id="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, email: e.target.value }))
-              }
-              className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 text-sm text-slate-900"
-              required
+              placeholder="Enter user email"
+              className="col-span-3"
+              onChange={(e) => setEmail(e.currentTarget.value)}
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium text-slate-900"
-            >
+            <Label htmlFor="name" className="text-right">
               Role
-            </label>
-            <select
-              id="role"
-              value={formData.role}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  role: e.target.value as Role,
-                }))
-              }
-              className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 text-sm text-slate-900"
-            >
-              <option value="employee">Employee</option>
-              <option value="admin">Admin</option>
-            </select>
+            </Label>
+            <Select onValueChange={(value) => setRole(value as Role)}>
+              <SelectTrigger
+                className="col-span-3"
+                data-testid="invite-user-role-select-trigger"
+              >
+                <SelectValue placeholder="Select a role" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(Role).map((role) => (
+                  <SelectItem
+                    key={role}
+                    value={role}
+                    data-testid={`invite-user-role-select-item-${role}`}
+                  >
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-
           {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">{error}</div>
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
-
-          <div className="flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <LuLoader className="h-4 w-4 animate-spin" />
-              ) : (
-                'Send Invitation'
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            variant="secondary"
+            data-testid="invite-user-cancel-button"
+            onClick={() => setIsOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            data-testid="invite-user-submit-button"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <LuLoader
+                className="animate-spin"
+                data-testid="invite-user-submit-button-loading"
+              />
+            ) : (
+              'Invite User'
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

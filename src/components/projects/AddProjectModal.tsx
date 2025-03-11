@@ -1,28 +1,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { LuLoader } from 'react-icons/lu';
-import Modal from '@/components/common/Modal';
+import { LuLoader, LuPlus } from 'react-icons/lu';
 import type { Client } from '@/types/database.types';
 import { createClient } from '@/utils/supabase/client';
 
-interface AddProjectModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-}
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Alert, AlertDescription } from '../ui/alert';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { toast } from 'sonner';
+import { validateProjectName } from '@/utils/validation';
 
-export function AddProjectModal({
-  isOpen,
-  onClose,
-  onSuccess,
-}: AddProjectModalProps) {
+export function AddProjectModal({ refresh }: { refresh: () => void }) {
   const [name, setName] = useState('');
   const [clientId, setClientId] = useState('');
   const [clients, setClients] = useState<Client[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -52,112 +65,140 @@ export function AddProjectModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !clientId) {
+    if (!name.trim() && !clientId) {
       setError('Project name and client are required');
       return;
     }
-
+    if (!name.trim()) {
+      setError('Project name is required');
+      return;
+    }
+    if (!clientId) {
+      setError('Client is required');
+      return;
+    }
     try {
       setIsSubmitting(true);
       setError(null);
+      const error = validateProjectName(name);
+      if (error) {
+        setError(error);
+        return;
+      }
 
       const { error: insertError } = await supabase
         .from('projects')
         .insert([{ name: name.trim(), client_id: clientId }]);
-
       if (insertError) throw insertError;
-
-      handleClose();
-      onSuccess?.();
+      refresh();
+      setIsOpen(false);
+      toast.success('Project added successfully');
     } catch (error) {
       console.error('[AddProject] Submit error:', error);
-      setError('Failed to add project. Please try again.');
+      if (error?.message.includes('duplicate key')) {
+        setError('Project already exists.');
+      } else {
+        setError('Failed to add project. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleClose = () => {
-    setName('');
-    setClientId('');
-    setError(null);
-    onClose();
-  };
-
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Add Project">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Project Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm text-slate-900"
-            placeholder="Enter project name"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="client"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Client
-          </label>
-          <select
-            id="client"
-            value={clientId}
-            onChange={(e) => setClientId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm text-slate-900"
-            disabled={isLoading}
-          >
-            <option value="">Select a client</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.id}>
-                {client.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {error && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">{error}</h3>
-              </div>
-            </div>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={() => setIsOpen(true)}
+          data-testid="add-project-modal-trigger"
+        >
+          <LuPlus className="h-4 w-4" /> Add New Project
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle data-testid="add-project-modal-title">
+            Add New Project
+          </DialogTitle>
+          <DialogDescription>
+            Add a new project to your company.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Project Name
+            </Label>
+            <Input
+              data-testid="add-project-name-input"
+              id="name"
+              placeholder="Enter project name"
+              className="col-span-3"
+              onChange={(e) => setName(e.currentTarget.value)}
+            />
+            <Label htmlFor="name" className="text-right">
+              Client
+            </Label>
+            <Select
+              disabled={isLoading}
+              onValueChange={(value) => setClientId(value)}
+            >
+              <SelectTrigger
+                className="col-span-3"
+                data-testid="add-project-client-select"
+              >
+                <SelectValue placeholder="Select a client" />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map((client) => (
+                  <SelectItem
+                    key={client.id}
+                    value={client.id}
+                    data-testid={`add-project-client-select-item-${client.id}`}
+                  >
+                    {client.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        )}
-
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="rounded-md px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+          {error && (
+            <Alert variant="destructive" data-testid="add-project-error">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            variant="secondary"
+            data-testid="add-project-cancel-button"
+            onClick={() => setIsOpen(false)}
           >
             Cancel
-          </button>
-          <button
-            type="submit"
+          </Button>
+          <Button
+            type="button"
+            data-testid="add-project-submit-button"
+            onClick={handleSubmit}
             disabled={isSubmitting || isLoading}
-            className="inline-flex items-center gap-2 rounded-md bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
           >
             {isSubmitting ? (
-              <LuLoader className="h-4 w-4 animate-spin" />
+              <LuLoader
+                className="animate-spin"
+                data-testid="add-project-submit-button-loading"
+              />
             ) : (
               'Add Project'
             )}
-          </button>
-        </div>
-      </form>
-    </Modal>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

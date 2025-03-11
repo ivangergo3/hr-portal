@@ -1,6 +1,6 @@
-import { createClientServer } from '@/utils/supabase/server';
-import { NextResponse } from 'next/server';
-import { ApiResponse } from '@/types/database.types';
+import { createClientServer } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
+import { ApiResponse } from "@/types/database.types";
 
 type SessionResponse = ApiResponse<{
   user: null;
@@ -10,12 +10,12 @@ type SessionResponse = ApiResponse<{
 export async function GET(request: Request) {
   try {
     const requestUrl = new URL(request.url);
-    const code = requestUrl.searchParams.get('code');
+    const code = requestUrl.searchParams.get("code");
 
     if (!code) {
-      console.error('[Auth Callback] No code provided');
+      console.error("[Auth Callback] No code provided");
       return NextResponse.redirect(
-        new URL('/error?code=no_auth_code', request.url),
+        new URL("/error?code=no_auth_code", request.url),
       );
     }
 
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 
       if (error) {
         console.error(
-          '[Auth Callback] Session exchange failed:',
+          "[Auth Callback] Session exchange failed:",
           error.message,
         );
         return NextResponse.redirect(
@@ -38,15 +38,15 @@ export async function GET(request: Request) {
         );
       }
 
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     } catch (error) {
-      console.error('[Auth Callback] Session error:', error);
+      console.error("[Auth Callback] Session error:", error);
       return NextResponse.redirect(
-        new URL('/error?code=auth_error', request.url),
+        new URL("/error?code=auth_error", request.url),
       );
     }
   } catch (error) {
-    console.error('[Auth Callback] Critical error:', error);
-    return NextResponse.redirect(new URL('/error?code=critical', request.url));
+    console.error("[Auth Callback] Critical error:", error);
+    return NextResponse.redirect(new URL("/error?code=critical", request.url));
   }
 }
